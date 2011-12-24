@@ -4,10 +4,10 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
+var mongoose = require('mongoose')
+var routes = require('./routes')
 
 var app = module.exports = express.createServer();
-
 // Configuration
 
 app.configure(function(){
