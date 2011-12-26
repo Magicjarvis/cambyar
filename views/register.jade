@@ -1,5 +1,12 @@
 h2 Registration Page
 
+.errors
+  if typeof errors != 'undefined'
+    ul
+      each error in errors
+        li= error
+
+
 form(action='/register', method='POST')
   p
     label(for='login') Username
