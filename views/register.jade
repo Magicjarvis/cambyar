@@ -7,9 +7,9 @@ h2 Registration Page
         li= error
 
 
-form(action='/register', method='POST')
+form(action='/register', method='POST') 
   p
-    label(for='login') Username
+    label(for='login') Desired Username
     input(type='text', name=everyauth.password.loginFormFieldName)#login
   p
     label(for='password') Password
@@ -17,5 +17,11 @@ form(action='/register', method='POST')
   p
     label(for='email') E-mail
     input(type='text', name='email')#email
+   p
+    label(for='first_name') First Name
+    input(type='text', name='first_name')#first_name
+  p
+    label(for='last_name') Last Name
+    input(type='text', name='last_name')#last_name
   p
     input(type='submit', value='Submit')

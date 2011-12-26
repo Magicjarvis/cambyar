@@ -27,6 +27,8 @@ everyauth.password
     .extractExtraRegistrationParams( function(req) {
         return {
             'email': req.body.email,
+            'first_name': req.body.first_name,
+            'last_name': req.body.last_name,
         };
     })
     .validateRegistration(auth.validateRegistration)
