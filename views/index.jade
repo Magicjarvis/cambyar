@@ -1,2 +1,9 @@
-h1= title
-p Welcome to #{title}
+h1 Cambyar
+p Welcome #{name}
+if loggedIn
+  a(href='/logout', title='Leave us') Logout
+else
+  p 
+    a(href='/register', title='Registration Page') Register
+  p 
+    a(href='/login', title='Login Page') Login
