@@ -1,7 +1,10 @@
 h1 Cambyar
 p Welcome #{name}
 if loggedIn
-  a(href='/logout', title='Leave us') Logout
+  p
+    img(src=email_hash)
+  p
+    a(href='/logout', title='Leave us') Logout
 else
   p 
     a(href='/register', title='Registration Page') Register
