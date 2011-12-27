@@ -11,7 +11,7 @@ var auth = require('./lib/auth')
 
 var app = module.exports = express.createServer();
 
-mongoose.connect('mongodb://localhost/cambyar');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/cambyar');
 
 everyauth.everymodule.findUserById(auth.findUserById);
 
