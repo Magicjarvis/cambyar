@@ -1,13 +1,19 @@
-
 /*
  * GET home page.
  */
 var mongoose = require('mongoose');
 var md5 = require('MD5');
-var models = require('../lib/models')
+var models = require('../lib/models');
+var lesson = require('./lesson');
 var User = models.User;
 
-exports.index = function(req, res){
+exports.setRoutes = function(app) {
+    app.get('/',index);
+    app.get('/create-lesson',lesson.create)
+    app.post('/create-lesson',lesson.save)
+};
+
+function index(req, res){
     var name = 'Gangsta';
     var email_hash = 'http://www.gravatar.com/avatar/';
     if(req.user) {
@@ -20,4 +26,5 @@ exports.index = function(req, res){
         'loggedIn': req.loggedIn,
         'email_hash': email_hash,
     });
-};
+}
+

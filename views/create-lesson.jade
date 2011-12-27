@@ -1,0 +1,18 @@
+h2 Create A Lesson
+
+
+form(action='/create-lesson', method='POST')
+  p
+    label(for='title') Lesson Title
+    input(type='text', name='title')#title
+  p
+    label(for='tags') Tags (Subjects)
+    input(type='text', name='tags')#tags
+  p
+    label(for='desc') Description
+    textarea(name='desc', rows=4, cols=50)#desc
+  p
+    label(for='contact') Contact Info
+    ~#TODO
+  p
+    input(type='submit', value="Submit")
