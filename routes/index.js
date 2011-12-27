@@ -20,7 +20,6 @@ function index(req, res){
         name = req.user.username;
         email_hash+=md5(req.user.email);
     }
-    console.log(JSON.stringify(req.user));
     res.render('index', {  
         'name': name,
         'loggedIn': req.loggedIn,
