@@ -1,0 +1,7 @@
+form(action='/lessons', method='POST')
+  input(type='text', name='search_bar')#search_bar
+  input(type='submit', value='Search')
+each lesson in lessons
+  p
+    h3= lesson.title
+  p= lesson.description

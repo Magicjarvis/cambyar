@@ -9,8 +9,10 @@ var User = models.User;
 
 exports.setRoutes = function(app) {
     app.get('/',index);
-    app.get('/create-lesson',lesson.create)
-    app.post('/create-lesson',lesson.save)
+    app.get('/create-lesson',lesson.create);
+    app.post('/create-lesson',lesson.save);
+    app.get('/lessons', lesson.list);
+    app.post('/lessons', lesson.search);
 };
 
 function index(req, res){

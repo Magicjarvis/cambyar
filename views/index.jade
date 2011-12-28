@@ -1,15 +1,7 @@
 h1 Cambyar
 p Welcome #{name}
-if loggedIn
+if req.loggedIn
   p
-    img(src=email_hash)
-  p
-    a(href='/logout', title='Leave us') Logout
-else
-  p 
-    a(href='/register', title='Registration Page') Register
-  p 
-    a(href='/login', title='Login Page') Login
-
+    a(href='/create-lesson', title='Makin lessons') Create Lesson
 p
-  a(href='/create-lesson', title='Makin lessons') Create Lesson
+  a(href='/lessons', title='Search fa shit') Search

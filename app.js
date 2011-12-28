@@ -3,11 +3,12 @@
  * Module dependencies.
  */
 
-var express = require('express')
-var mongoose = require('mongoose')
-var everyauth = require('everyauth')
-var routes = require('./routes')
-var auth = require('./lib/auth')
+var express = require('express');
+var mongoose = require('mongoose');
+var everyauth = require('everyauth');
+var md5 = require('MD5');
+var routes = require('./routes');
+var auth = require('./lib/auth');
 
 var app = module.exports = express.createServer();
 
@@ -58,6 +59,20 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
+
+app.dynamicHelpers({                                                             
+    user: function(req, res) {                                                   
+        return req.user;                                                         
+    },                                                                           
+    req: function(req, res) {                                                    
+        return req;                                                              
+    },
+    email_hash: function(req, res) {
+        var url = 'http://www.gravatar.com/avatar/';
+        if(req.loggedIn) url+=md5(req.user.email);
+        return url;
+    },
+});  
 
 // Routes
 
