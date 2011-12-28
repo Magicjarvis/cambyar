@@ -12,3 +12,8 @@ a {
   list-style-type: none;
   padding-right: 20px;
 }
+
+.lesson {
+    background-color: #cccccc;
+    cursor: pointer;
+}
