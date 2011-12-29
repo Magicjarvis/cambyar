@@ -1,0 +1,10 @@
+if req.loggedIn
+  if user.username == this_user.username
+    a(href='/user/edit-profile/') Edit Profile
+p
+  | Username: #{this_user.username}
+p
+  | E-Mail: #{this_user.email}
+p
+  | Name: #{this_user.name.first}
+

@@ -1,0 +1,11 @@
+h2 Send #{teacher.username} a request for '#{lesson.title}'
+
+form(action='/lessons/request?l='+lesson._id, method='POST')
+  p
+    label(for='from') From
+    input(type='text', name='from')#from
+  p
+    label(for='message') Message
+    textarea(name='message', rows=4, cols=20)#message
+  p
+    input(type='submit', value='Send')

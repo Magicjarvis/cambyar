@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var async = require('async');
 var models = mongoose.models;
-var Lesson = models.Lesson;
 
 exports.create = function(req, res) {
     res.render('create-lesson');
@@ -27,7 +26,7 @@ exports.save = function(req, res, next) {
             }
         });
     }, function(err, results) {
-        var lesson = new Lesson({
+        var lesson = new models.Lesson({
             user: req.user._id, 
             description: req.body.desc,
             title: req.body.title,
@@ -43,7 +42,7 @@ exports.save = function(req, res, next) {
 }
 
 exports.list = function(req, res, next) {
-    models.Lesson.find({}, function(err, lessons){
+    models.Lesson.find({}, function(err, lessons) {
         if(err) return next(err);
         res.render('lessons', {
             'lessons': lessons,
@@ -58,13 +57,13 @@ exports.search = function(req, res, next) {
     models.Lesson.find({description: regex}, function(err, primary) {
         if(err) return next(err);
         results = results.concat(primary);
-        async.map(results, function(lesson, cb){
+        async.map(results, function(lesson, cb) {
             cb(null,lesson._id);
-        }, function(err, ids){
+        }, function(err, ids) {
             if(err) next(err);
             var terms = term.split(' ');
             regex.compile('('+terms.join('|')+')','i');
-            models.Lesson.find({description: regex, _id: {$nin: ids}}, function(err,secondary){
+            models.Lesson.find({description: regex, _id: {$nin: ids}}, function(err,secondary) {
                 if(err) return next(err);
                 results = results.concat(secondary);
                 res.render('lessons', {
@@ -74,3 +73,78 @@ exports.search = function(req, res, next) {
         });
     });
 }
+
+exports.page = function(req, res, next) {
+    models.Lesson.findById(req.params.id, function(err, lesson) {
+        if(err) {
+            if(err.message !== 'Invalid ObjectId') return next(err);
+        }
+        /* No lesson by that id exists */
+        if(!lesson) {
+            return res.send('<strong>Hey this isn\' a page</strong>',404);
+        } else {
+            models.User.findById(lesson.user, function(err, user) {
+                if(err) return next(err);
+                if(!user) {
+                    return;
+                } //some serious shit went down
+                lesson.author = user;
+                res.render('lesson', {
+                    'lesson': lesson,
+                });
+
+            }); 
+        }
+    });
+}
+
+exports.requestForm = function(req, res, next) {
+    models.Lesson.findById(req.query.l, function(err, lesson) {
+        if(err) {
+            if(err.message !== 'Invalid ObjectId') return next(err);
+        }
+        if(!lesson) res.send('Nothing here. Move Along', 404);
+        models.User.findById(lesson.user, function(err, user) {
+            if(err) return next(err);
+            if(!user) return; //render something later?
+
+            res.render('send-request', {
+                'teacher': user,
+                'lesson': lesson,
+            });
+        });
+    });   
+}
+
+exports.sendRequest = function(req, res, next) {
+    console.log(req.query.l);
+    models.Lesson.findById(req.query.l, function(err, lesson) {
+        if(err) { 
+            if(err.message !== 'Invalid ObjectId') return next(err);
+        } 
+        if(!lesson) res.send('Nothing here', 404);
+        
+        var request = new models.Request({
+            to: lesson.user,
+            message: req.body.message,
+            lesson: lesson._id,
+        });
+        if(req.loggedIn) request.from = req.user._id;
+       
+        request.save(function(err) {
+            if(err) return next(err);
+            console.log(JSON.stringify(request));
+            res.redirect('/lessons/'+lesson._id);
+        });
+    });
+
+}
+
+
+
+
+
+
+
+
+
