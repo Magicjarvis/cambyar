@@ -10,7 +10,7 @@ html
           li                                                                       
             img(src=email_hash + '?s=30')                                                          
           li
-            #{user.name.first}
+            a(href='/user/#{user.username}') #{user.name.first}
           li                                                                              
             a(href='/logout', title='Leave us') Logout                                   
         else                                                                             
