@@ -24,9 +24,9 @@ exports.view = function(req, res, next) {
  * GET request for editing a profile
  */
 exports.edit = function(req, res, next) {
-    models.Tag.find({_id: {$in : req.user.interests}}, function(err, interests){
+    models.Tag.find({_id: {$in : req.user.interests}}, function(err, interests) {
         if (err) return next(err);
-        models.Tag.find({_id: {$in: req.user.expertise}}, function(err, expertise){
+        models.Tag.find({_id: {$in: req.user.expertise}}, function(err, expertise) {
             if(err) return next(err);
             res.render('edit-profile', {
                 'interests': interests,
@@ -44,7 +44,7 @@ exports.edit = function(req, res, next) {
 exports.update = function(req, res, next) {
     var interests = req.body.interests.split(',');
     var expertise = req.body.expertise.split(',');
-    models.User.findOne({'email': req.body.email}, function(err, user){
+    models.User.findOne({'email': req.body.email}, function(err, user) {
         if (err) return next(err);
         if (user) { 
             res.redirect('/user/edit-profile'); 
@@ -54,7 +54,7 @@ exports.update = function(req, res, next) {
                     if (err) cb(err, null);
                     else if (!tag) {
                         var new_tag = new models.Tag({name: interest});
-                        new_tag.save(function(err){
+                        new_tag.save(function(err) {
                             cb(null, new_tag._id);
                         });
                     }
@@ -67,7 +67,7 @@ exports.update = function(req, res, next) {
                         if (err) cb(err, null);
                         else if (!tag){
                             var new_tag = new models.Tag({name: subject});
-                            new_tag.save(function(err){
+                            new_tag.save(function(err) {
                                 cb(null, new_tag._id);
                             });
                         }
@@ -83,7 +83,7 @@ exports.update = function(req, res, next) {
                         'email': req.body.email,
                         'interests': interest_ids,
                         'expertise': expert_ids,
-                    }, function (err){
+                    }, function (err) {
                         if (err) return next(err);
                         res.redirect('/user/'+req.user.username);
                     }); 
