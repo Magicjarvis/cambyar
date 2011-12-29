@@ -25,7 +25,9 @@ exports.setRoutes = function(app) {
     app.get('/lessons/:id', lesson.page);
     app.post('/lessons', lesson.search);
 
-    app.get('/user/:username', user.view);
+    app.get('/user/edit-profile', user.edit);
+    app.post('/user/edit-profile', user.update);
+    app.get('/user/:username', user.view);   
 };
 
 /*
