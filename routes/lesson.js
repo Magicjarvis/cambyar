@@ -1,12 +1,23 @@
+/* 
+ * lesson.js
+ *   Render lesson pages
+ */
 var mongoose = require('mongoose');
 var async = require('async');
 var models = mongoose.models;
 
+/*
+ * Create-lesson GET page
+ */
 exports.create = function(req, res) {
     res.render('create-lesson');
-
 };
 
+
+/*
+ * POST request for creating a lesson
+ *   redirects to '/' on successful DB save
+ */
 exports.save = function(req, res, next) {
     tags = req.body.tags.split(',');
     async.map(tags, function(tag, cb) {
@@ -41,6 +52,10 @@ exports.save = function(req, res, next) {
     });
 }
 
+
+/*
+ * GET request on the search page
+ */
 exports.list = function(req, res, next) {
     models.Lesson.find({}, function(err, lessons) {
         if(err) return next(err);
@@ -50,6 +65,11 @@ exports.list = function(req, res, next) {
     });
 }
 
+
+/*
+ * POST request on search query
+ *   Only searches through descripton at the moment
+ */
 exports.search = function(req, res, next) {
     var term = req.body.search_bar;
     var regex = new RegExp(term,'i');
@@ -74,6 +94,10 @@ exports.search = function(req, res, next) {
     });
 }
 
+
+/*
+ * GET request on a lesson page
+ */
 exports.page = function(req, res, next) {
     models.Lesson.findById(req.params.id, function(err, lesson) {
         if(err) {
@@ -98,6 +122,10 @@ exports.page = function(req, res, next) {
     });
 }
 
+
+/*
+ * GET request for the 'Request a Lesson' page
+ */
 exports.requestForm = function(req, res, next) {
     models.Lesson.findById(req.query.l, function(err, lesson) {
         if(err) {
@@ -116,6 +144,10 @@ exports.requestForm = function(req, res, next) {
     });   
 }
 
+
+/*
+ * POST request for sending the Lesson Request form
+ */
 exports.sendRequest = function(req, res, next) {
     console.log(req.query.l);
     models.Lesson.findById(req.query.l, function(err, lesson) {
@@ -139,12 +171,3 @@ exports.sendRequest = function(req, res, next) {
     });
 
 }
-
-
-
-
-
-
-
-
-

@@ -1,8 +1,12 @@
-
-/**
- * Module dependencies.
+/*
+ * app.js
+ *   The app itself
  */
 
+
+/*
+ * Module dependencies.
+ */
 var express = require('express');
 var mongoose = require('mongoose');
 var everyauth = require('everyauth');
@@ -13,6 +17,10 @@ var auth = require('./lib/auth');
 var app = module.exports = express.createServer();
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/cambyar');
+
+
+
+// Set up everyauth authentication and helpers
 
 everyauth.everymodule.findUserById(auth.findUserById);
 
@@ -35,6 +43,8 @@ everyauth.password
     .validateRegistration(auth.validateRegistration)
     .registerUser(auth.registerUser)
     .registerSuccessRedirect('/');
+
+
 // Configuration
 
 app.configure(function(){
@@ -60,6 +70,7 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+// Set up middleware to pass data to our views
 app.dynamicHelpers({                                                             
     user: function(req, res) {                                                   
         return req.user;                                                         
@@ -74,10 +85,10 @@ app.dynamicHelpers({
     },
 });  
 
-// Routes
-
+// Set routes
 routes.setRoutes(app);
 
+// Start server!
 var port = process.env.PORT || 3000;
 app.listen(port);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
