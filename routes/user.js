@@ -46,8 +46,9 @@ exports.update = function(req, res, next) {
     var expertise = req.body.expertise.split(',');
     models.User.findOne({'email': req.body.email}, function(err, user){
         if (err) return next(err);
-        if (user) res.redirect('user/edit-profile'); 
-        else {
+        if (user) { 
+            res.redirect('/user/edit-profile'); 
+        } else {
             async.map(interests, function(interest, cb) {
                 models.Tag.findOne({name: interest}, function(err, tag) {
                     if (err) cb(err, null);
