@@ -1,12 +1,18 @@
 /*
- * GET home page.
+ * index.js
+ * Sets all the routes throug here
  */
+
 var mongoose = require('mongoose');
 var md5 = require('MD5');
 var models = require('../lib/models');
 var lesson = require('./lesson');
 var user = require('./user');
 
+/*
+ * Sets all the routes
+ *   Params: app
+ */
 exports.setRoutes = function(app) {
     app.get('/',index);
     
@@ -22,6 +28,9 @@ exports.setRoutes = function(app) {
     app.get('/user/:username', user.view);
 };
 
+/*
+ * Home page
+ */
 function index(req, res){
     res.render('index');
 }
