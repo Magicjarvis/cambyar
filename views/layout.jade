@@ -15,8 +15,8 @@ html
             a(href='/logout', title='Leave us') Logout                                   
         else                                                                             
           li                                                                              
-            a(href='/register', title='Registration Page') Register                      
-          li                                                                              
-            a(href='/login', title='Login Page') Login                                   
+            a(href='/register?n='+enc_url, title='Registration Page') Register                      
+          li
+            a(href='/login?n='+enc_url, title='Login Page') Login                                   
 
   #body!= body

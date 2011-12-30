@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var md5 = require('MD5');
 var models = require('../lib/models');
+var auth = require('../lib/auth');
 var lesson = require('./lesson');
 var user = require('./user');
 
@@ -16,17 +17,17 @@ var user = require('./user');
 exports.setRoutes = function(app) {
     app.get('/',index);
     
-    app.get('/create-lesson',lesson.create);
-    app.post('/create-lesson',lesson.save);
+    app.get('/create-lesson', auth.requireLogin,lesson.create);
+    app.post('/create-lesson', auth.requireLogin, lesson.save);
 
     app.get('/lessons', lesson.list);
-    app.get('/lessons/request', lesson.requestForm);
-    app.post('/lessons/request', lesson.sendRequest);
+    app.get('/lessons/request', auth.requireLogin, lesson.requestForm);
+    app.post('/lessons/request', auth.requireLogin, lesson.sendRequest);
     app.get('/lessons/:id', lesson.page);
     app.post('/lessons', lesson.search);
 
-    app.get('/user/edit-profile', user.edit);
-    app.post('/user/edit-profile', user.update);
+    app.get('/user/edit-profile', auth.requireLogin, user.edit);
+    app.post('/user/edit-profile', auth.requireLogin, user.update);
     app.get('/user/:username', user.view);   
 };
 

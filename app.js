@@ -29,7 +29,10 @@ everyauth.password
     .postLoginPath('/login')
     .loginView('login')
     .authenticate(auth.authenticate)
-    .loginSuccessRedirect('/')
+    .loginLocals(function(req, res) {
+        return { next: req.query.n };
+    })
+    .respondToLoginSucceed(auth.respondToLoginSucceed)
     .getRegisterPath('/register')
     .postRegisterPath('/register')
     .registerView('register')
@@ -42,7 +45,10 @@ everyauth.password
     })
     .validateRegistration(auth.validateRegistration)
     .registerUser(auth.registerUser)
-    .registerSuccessRedirect('/');
+    .registerLocals(function (req, res) {
+        return { next: req.query.n };
+    })
+    .respondToRegistrationSucceed(auth.respondToRegistrationSucceed);
 
 
 // Configuration
@@ -83,6 +89,9 @@ app.dynamicHelpers({
         if(req.loggedIn) url+=md5(req.user.email);
         return url;
     },
+    enc_url: function(req, res) {
+        return encodeURIComponent(req.url);
+    }
 });  
 
 // Set routes
