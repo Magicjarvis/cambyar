@@ -157,11 +157,11 @@ exports.sendRequest = function(req, res, next) {
         if(!lesson) res.send('Nothing here', 404);
         
         var request = new models.Request({
+            from: req.user._id,
             to: lesson.user,
             message: req.body.message,
             lesson: lesson._id,
         });
-        if(req.loggedIn) request.from = req.user._id;
        
         request.save(function(err) {
             if(err) return next(err);
