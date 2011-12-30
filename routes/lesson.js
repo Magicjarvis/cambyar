@@ -171,3 +171,31 @@ exports.sendRequest = function(req, res, next) {
     });
 
 }
+
+/*
+ * GET request on the rating page
+ */
+exports.rate = function(req, res, next) {
+    models.Lesson.findById(req.query.l, function(err, lesson) {
+        if(err) {
+            if(err.message !== 'Invalid ObjectId') return next(err)
+        }
+        if(!lesson) res.send('Nothing here', 404);
+        models.User.findById(lesson.user, function(err, user) {
+            if(err) {
+                if(err.message !== 'Invalid ObjectId') return next(err)
+            }
+            if(!user) res.send('Something\'s broken', 500);
+            res.render('rate', {
+                'lesson': lesson,
+                'teacher': user,
+            });
+        });
+    });
+}
+
+exports.sendRate = function(req, res, next) {
+    models.Lesson.findById(req.query.l, function(err, lesson) {
+        
+    });
+}
