@@ -1,0 +1,15 @@
+Hello {{username}}
+
+You have a pending lesson request at Cambyar.com
+
+To respond to this request please go to:
+
+{{response_url}}
+
+Thanks,
+Cambyar team
+
+
+To unsuscribe from these emails go to:
+
+{{edit_url}}
