@@ -1,0 +1,15 @@
+
+h2 Rate '#{lesson.title}' by #{teacher.name.full} (#{teacher.username})
+form(action='/lessons/rate?l='+ lesson._id, method='POST')
+input(type="radio", name="scale", value=1)
+input(type="radio", name="scale", value=2)
+input(type="radio", name="scale", value=3)
+input(type="radio", name="scale", value=4)
+input(type="radio", name="scale", value=5)
+input(type="radio", name="scale", value=6)
+input(type="radio", name="scale", value=7)
+input(type="radio", name="scale", value=8)
+input(type="radio", name="scale", value=9)
+input(type="radio", name="scale", value=10)
+input(type='submit', value='Rate')
+
