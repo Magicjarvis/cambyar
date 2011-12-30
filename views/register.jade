@@ -24,4 +24,5 @@ form(action='/register', method='POST')
     label(for='last_name') Last Name
     input(type='text', name='last_name')#last_name
   p
+    input(type='hidden', name='next', value=next)
     input(type='submit', value='Submit')
