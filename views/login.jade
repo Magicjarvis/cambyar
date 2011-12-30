@@ -1,4 +1,7 @@
-h2 Log in!
+if flash.context
+  h2= flash.context[0]
+else
+  h2 Log in!
 
 .errors                                                                          
   if typeof errors != 'undefined'                                                

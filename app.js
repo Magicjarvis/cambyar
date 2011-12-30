@@ -91,7 +91,10 @@ app.dynamicHelpers({
     },
     enc_url: function(req, res) {
         return encodeURIComponent(req.url);
-    }
+    },
+    flash: function(req, res) {
+        return req.flash();     
+    },
 });  
 
 // Set routes
