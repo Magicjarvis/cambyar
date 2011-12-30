@@ -3,16 +3,13 @@ h2= user.name.full
 form(action='/user/edit-profile', method='POST')
   p
     label(for='name_first') First Name
-    input(type='text', name='name_first')#name_first
-    | Current: #{user.name.first}
+    input(type='text', name='name_first', value= user.name.first)#name_first
   p
     label(for='name_last') Last Name
-    input(type='text', name='name_last')#name_last
-    | Current: #{user.name.last}
+    input(type='text', name='name_last', value= user.name.last)#name_last
   p
     label(for='email') E-mail 
-    input(type='text', name='email')#email
-    | Current: #{user.email}
+    input(type='text', name='email', value= user.email)#email
   p
     label(for='interests') Interests
     input(type='text', name='interests')#interests
