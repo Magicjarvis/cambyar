@@ -9,8 +9,15 @@ var models = mongoose.models;
 /*
  * Create-lesson GET page
  */
-exports.create = function(req, res) {
-    res.render('create-lesson');
+exports.create = function(req, res, next) {
+    
+    models.Tag.find({}, function(err, tags) {
+        if(err) return next(err);
+        res.render('create-lesson', {
+            allTags: tags,
+        });
+    });
+    
 };
 
 

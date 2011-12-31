@@ -7,7 +7,7 @@ form(action='/create-lesson', method='POST')
     input(type='text', name='title')#title
   p
     label(for='tags') Tags (Subjects)
-    input(type='text', name='tags')#tags
+    input(type='text', name='tags')#tagstest
   p
     label(for='desc') Description
     textarea(name='desc', rows=4, cols=50)#desc
@@ -16,3 +16,12 @@ form(action='/create-lesson', method='POST')
     ~#TODO
   p
     input(type='submit', value="Submit")
+
+
+
+script(type='text/javascript')
+    $(function() {
+        $('#tagstest').tagit({
+            availableTags: allTags,
+        });
+    });
