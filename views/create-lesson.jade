@@ -7,7 +7,7 @@ form(action='/create-lesson', method='POST')
     input(type='text', name='title')#title
   p
     label(for='tags') Tags (Subjects)
-    input(type='text', name='tags')#tagstest
+    input(name='tags', id='tagstest')
   p
     label(for='desc') Description
     textarea(name='desc', rows=4, cols=50)#desc
@@ -22,6 +22,6 @@ form(action='/create-lesson', method='POST')
 script(type='text/javascript')
     $(function() {
         $('#tagstest').tagit({
-            availableTags: allTags,
+            availableTags: [#{allTags}]
         });
     });

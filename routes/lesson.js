@@ -13,8 +13,14 @@ exports.create = function(req, res, next) {
     
     models.Tag.find({}, function(err, tags) {
         if(err) return next(err);
-        res.render('create-lesson', {
-            allTags: tags,
+        async.map(tags, function(tag, cb) {
+            
+            cb(null,"'"+ tag.name+ "'"); 
+        }, function(err, results) {
+            console.log(results);
+            res.render('create-lesson', {
+                allTags: results,
+            });
         });
     });
     
