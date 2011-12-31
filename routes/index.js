@@ -23,6 +23,7 @@ exports.setRoutes = function(app) {
 
     app.get('/lessons', lesson.list);
     app.get('/lessons/rate', auth.requireLogin, lesson.rate);
+    app.post('/lessons/rate', auth.requireLogin, lesson.sendRating);
     app.get('/lessons/request', auth.requireLogin, lesson.requestForm);
     app.post('/lessons/request', auth.requireLogin, lesson.sendRequest);
     app.get('/lessons/:id', lesson.page);

@@ -194,8 +194,40 @@ exports.rate = function(req, res, next) {
     });
 }
 
-exports.sendRate = function(req, res, next) {
-    models.Lesson.findById(req.query.l, function(err, lesson) {
-        
+exports.sendRating = function(req, res, next) {
+     models.Lesson.findById(req.query.l, function(err, lesson) {
+        console.log(lesson)
+        if(err) {
+            if(err.message !== 'Invalid ObjectId') return next(err)
+        }
+        if(!lesson) res.send('Nothing here', 404);
+        models.User.findById(lesson.user, function(err, user) {
+
+            console.log(user);
+            if(err) {
+                if(err.message !== 'Invalid ObjectId') return next(err)
+            }
+            if(!user) return res.send('Something\'s broken', 500);
+            models.Request.find({
+                to: user._id,
+                from: req.user._id,
+                lesson: lesson._id,
+                status: 'complete',
+            }, function(err, requests) {
+                if(err) return next(err);
+                console.log(requests);
+                if(requests.length < 1) return res.send('You can\'t do this', 404)
+                models.Rating.update({
+                    user: user._id, 
+                    rater: req.user._id, 
+                    lesson: lesson._id, 
+                }, {value: req.body.scale}, {upsert: true}, function(err, rating) {
+                    if(err) return next(err);
+                    console.log('logging: '+rating);
+                    res.redirect('/');
+                });
+            });
+
+        });
     });
 }
