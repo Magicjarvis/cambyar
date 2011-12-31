@@ -3,7 +3,7 @@ h2= lesson.title
 h3
   a(href='/user/'+lesson.author.username)= lesson.author.username
 p= lesson.description
-if req.user.username !== lesson.author.username
+if req.user.username !== lesson.author.username && !request
   p
     a(href='/lessons/request?l='+lesson._id) Teach me!
 p

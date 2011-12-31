@@ -112,11 +112,18 @@ exports.page = function(req, res, next) {
                 if(!user) {
                     return;
                 } //some serious shit went down
-                lesson.author = user;
-                res.render('lesson', {
-                    'lesson': lesson,
+                models.Request.findOne({
+                    to: user._id, 
+                    from: req.user._id,
+                    lesson: lesson._id,
+                }, function(err, request) {
+                    if (err) return next(err);
+                    lesson.author = user;
+                    res.render('lesson', {
+                        'lesson': lesson,
+                        'request': request,
+                    });    
                 });
-
             }); 
         }
     });
