@@ -10,4 +10,9 @@ p
   | E-Mail: #{this_user.email}
 p
   | Name: #{this_user.name.first}
-
+p
+  | Rating: #{rating}
+p
+  | Lessons:
+  each les in lessons
+    p= les.title
