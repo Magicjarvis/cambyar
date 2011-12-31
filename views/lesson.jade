@@ -3,7 +3,8 @@ h2= lesson.title
 h3
   a(href='/user/'+lesson.author.username)= lesson.author.username
 p= lesson.description
-p
-  a(href='/lessons/request?l='+lesson._id) Teach me!
+if req.user.username !== lesson.author.username
+  p
+    a(href='/lessons/request?l='+lesson._id) Teach me!
 p
   a(href='/lessons/rate?l='+lesson._id) Rate (This link will not be here normally)

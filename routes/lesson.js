@@ -136,6 +136,8 @@ exports.requestForm = function(req, res, next) {
             if(err) return next(err);
             if(!user) return; //render something later?
 
+            //Shouldn't happen unless user manually inputs URL
+            if(user.username === req.user.username) return res.redirect('/lessons'); 
             res.render('send-request', {
                 'teacher': user,
                 'lesson': lesson,
