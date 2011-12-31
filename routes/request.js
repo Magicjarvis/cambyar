@@ -4,6 +4,7 @@
  */
 
 var models = require('../lib/models');
+var utils = require('../lib/utils');
 
 /*
  * GET request on current request for user
@@ -70,11 +71,28 @@ function accept(req, res, next) {
  * Complete request
  */
 function complete(req, res, next) {
-    models.Request.update({_id: req.query.r, to: req.user._id, status: 'in_session'}, {
-        status: 'complete',
-    }, function(err) {
+    models.Request.findOne({
+        _id: req.query.r, 
+        to: req.user._id, 
+        status: 'in_session'
+    }, function(err, request) {
         if (err) return next(err);
-        res.redirect('/requests');
+        if (!request) return res.redirect('/requests');
+        request.status = 'complete';
+        request.save(function(err) {
+            if (err) return next(err);
+            models.User.findById(request.from, function(err, user) {
+                if (err) return next(err);
+                if (!user) return res.redirect('/requests');
+                utils.sendEmail(user.email, './public/email/rate.txt',{
+                    subject: 'Please Rate',
+                    username: user.username,
+                    rate_url: 'localhost:3000/lesson/rate?l='+request.lesson,
+                    edit_url: 'localhost:3000/edit-profile'
+                });
+                res.redirect('/requests');
+            });
+        });
     });
 }
 

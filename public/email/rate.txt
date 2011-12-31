@@ -1,0 +1,16 @@
+Hello {{username}},
+<p>
+It seems you have just finished a lesson. Congrats!
+</p>
+<p>
+To ensure quality we ask you to please rate your instructor by clicking on the following link:
+</p>
+{{rate_url}}
+<p>
+Thanks,
+Cambyar team
+</p>
+<p>
+To unsuscribe from these emails go to:
+</p>
+{{edit_url}}

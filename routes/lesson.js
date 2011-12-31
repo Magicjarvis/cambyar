@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose');
 var async = require('async');
+var utils = require('../lib/utils');
 var models = mongoose.models;
 
 /*
@@ -44,7 +45,6 @@ exports.save = function(req, res, next) {
             subjects: results, 
         });    
         lesson.save(function(err) {
-            console.log(JSON.stringify(lesson)); 
             if(err) return next(err);
             res.redirect('/');
         });
@@ -115,8 +115,7 @@ exports.page = function(req, res, next) {
                 lesson.author = user;
                 res.render('lesson', {
                     'lesson': lesson,
-                });
-
+                });    
             }); 
         }
     });
@@ -136,9 +135,19 @@ exports.requestForm = function(req, res, next) {
             if(err) return next(err);
             if(!user) return; //render something later?
 
-            res.render('send-request', {
-                'teacher': user,
-                'lesson': lesson,
+            //Shouldn't happen unless user manually inputs URL
+            if(user.username === req.user.username) return res.redirect('/lessons'); 
+            models.Request.findOne({
+                to: user._id,
+                from: req.user._id,
+                lesson: lesson._id,
+            }, function (err, request) {
+                if (err) return next(err);
+                if (request) return res.send('Already requested bud', 404);
+                res.render('send-request', {
+                    'teacher': user,
+                    'lesson': lesson,
+                });
             });
         });
     });   
@@ -149,7 +158,6 @@ exports.requestForm = function(req, res, next) {
  * POST request for sending the Lesson Request form
  */
 exports.sendRequest = function(req, res, next) {
-    console.log(req.query.l);
     models.Lesson.findById(req.query.l, function(err, lesson) {
         if(err) { 
             if(err.message !== 'Invalid ObjectId') return next(err);
@@ -165,8 +173,17 @@ exports.sendRequest = function(req, res, next) {
        
         request.save(function(err) {
             if(err) return next(err);
-            console.log(JSON.stringify(request));
-            res.redirect('/lessons/'+lesson._id);
+            models.User.findById(lesson.user, function(err, user) {
+                if (err) return next(err);
+                if (!user) return res.send('No teacher for this lesson', 404); 
+                utils.sendEmail(user.email, './public/email/request.txt', {
+                    'subject': 'Pending Requst at Cambyar',
+                    'username': user.username,
+                    'response_url': '/requests',
+                    'edit_url': '/edit-profile' 
+                });
+                res.redirect('/lessons/'+lesson._id);
+            });
         });
     });
 
