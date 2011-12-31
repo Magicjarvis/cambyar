@@ -10,8 +10,21 @@ var models = mongoose.models;
 /*
  * Create-lesson GET page
  */
-exports.create = function(req, res) {
-    res.render('create-lesson');
+exports.create = function(req, res, next) {
+    
+    models.Tag.find({}, function(err, tags) {
+        if(err) return next(err);
+        async.map(tags, function(tag, cb) {
+            
+            cb(null,"'"+ tag.name+ "'"); 
+        }, function(err, results) {
+            console.log(results);
+            res.render('create-lesson', {
+                allTags: results,
+            });
+        });
+    });
+    
 };
 
 
