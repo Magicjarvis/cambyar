@@ -4,6 +4,7 @@
  */
 
 var models = require('../lib/models');
+var utils = require('../lib/utils');
 
 /*
  * GET request on current request for user
@@ -84,11 +85,12 @@ function complete(req, res, next) {
                 if (err) return next(err);
                 if (!user) return res.redirect('/requests');
                 utils.sendEmail(user.email, './public/email/rate.txt',{
+                    subject: 'Please Rate',
                     username: user.username,
                     rate_url: 'localhost:3000/lesson/rate?l='+request.lesson,
                     edit_url: 'localhost:3000/edit-profile'
                 });
-
+                res.redirect('/requests');
             });
         });
     });

@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose');
 var async = require('async');
+var utils = require('../lib/utils');
 var models = mongoose.models;
 
 /*
@@ -176,6 +177,7 @@ exports.sendRequest = function(req, res, next) {
                 if (err) return next(err);
                 if (!user) return res.send('No teacher for this lesson', 404); 
                 utils.sendEmail(user.email, './public/email/request.txt', {
+                    'subject': 'Pending Requst at Cambyar',
                     'username': user.username,
                     'response_url': '/requests',
                     'edit_url': '/edit-profile' 
