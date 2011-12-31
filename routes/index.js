@@ -9,6 +9,7 @@ var models = require('../lib/models');
 var auth = require('../lib/auth');
 var lesson = require('./lesson');
 var user = require('./user');
+var request = require('./request');
 
 /*
  * Sets all the routes
@@ -30,6 +31,9 @@ exports.setRoutes = function(app) {
     app.get('/user/edit-profile', auth.requireLogin, user.edit);
     app.post('/user/edit-profile', auth.requireLogin, user.update);
     app.get('/user/:username', user.view);   
+
+    app.get('/requests', auth.requireLogin, request.list);
+    app.get('/requests/action', auth.requireLogin, request.action);
 };
 
 /*
