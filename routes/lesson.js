@@ -44,7 +44,6 @@ exports.save = function(req, res, next) {
             subjects: results, 
         });    
         lesson.save(function(err) {
-            console.log(JSON.stringify(lesson)); 
             if(err) return next(err);
             res.redirect('/');
         });
@@ -158,7 +157,6 @@ exports.requestForm = function(req, res, next) {
  * POST request for sending the Lesson Request form
  */
 exports.sendRequest = function(req, res, next) {
-    console.log(req.query.l);
     models.Lesson.findById(req.query.l, function(err, lesson) {
         if(err) { 
             if(err.message !== 'Invalid ObjectId') return next(err);
@@ -174,8 +172,16 @@ exports.sendRequest = function(req, res, next) {
        
         request.save(function(err) {
             if(err) return next(err);
-            console.log(JSON.stringify(request));
-            res.redirect('/lessons/'+lesson._id);
+            models.User.findById(lesson.user, function(err, user) {
+                if (err) return next(err);
+                if (!user) return res.send('No teacher for this lesson', 404); 
+                utils.sendEmail(user.email, './public/email/request.txt', {
+                    'username': user.username,
+                    'response_url': '/requests',
+                    'edit_url': '/edit-profile' 
+                });
+                res.redirect('/lessons/'+lesson._id);
+            });
         });
     });
 
