@@ -112,18 +112,10 @@ exports.page = function(req, res, next) {
                 if(!user) {
                     return;
                 } //some serious shit went down
-                models.Request.findOne({
-                    to: user._id, 
-                    from: req.user._id,
-                    lesson: lesson._id,
-                }, function(err, request) {
-                    if (err) return next(err);
-                    lesson.author = user;
-                    res.render('lesson', {
-                        'lesson': lesson,
-                        'request': request,
-                    });    
-                });
+                lesson.author = user;
+                res.render('lesson', {
+                    'lesson': lesson,
+                });    
             }); 
         }
     });
@@ -145,9 +137,17 @@ exports.requestForm = function(req, res, next) {
 
             //Shouldn't happen unless user manually inputs URL
             if(user.username === req.user.username) return res.redirect('/lessons'); 
-            res.render('send-request', {
-                'teacher': user,
-                'lesson': lesson,
+            models.Request.findOne({
+                to: user._id,
+                from: req.user._id,
+                lesson: lesson._id,
+            }, function (err, request) {
+                if (err) return next(err);
+                if (request) return res.send('Already requested bud', 404);
+                res.render('send-request', {
+                    'teacher': user,
+                    'lesson': lesson,
+                });
             });
         });
     });   
