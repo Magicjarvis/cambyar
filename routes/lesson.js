@@ -237,14 +237,11 @@ exports.rate = function(req, res, next) {
  */
 exports.sendRating = function(req, res, next) {
      models.Lesson.findById(req.query.l, function(err, lesson) {
-        console.log(lesson)
         if(err) {
             if(err.message !== 'Invalid ObjectId') return next(err)
         }
         if(!lesson) res.send('Nothing here', 404);
         models.User.findById(lesson.user, function(err, user) {
-
-            console.log(user);
             if(err) {
                 if(err.message !== 'Invalid ObjectId') return next(err)
             }
@@ -256,7 +253,6 @@ exports.sendRating = function(req, res, next) {
                 status: 'complete',
             }, function(err, requests) {
                 if(err) return next(err);
-                console.log(requests);
                 if(requests.length < 1) return res.send('You can\'t do this', 404)
                 models.Rating.update({
                     user: user._id, 
@@ -264,7 +260,6 @@ exports.sendRating = function(req, res, next) {
                     lesson: lesson._id, 
                 }, {value: req.body.scale}, {upsert: true}, function(err, rating) {
                     if(err) return next(err);
-                    console.log('logging: '+rating);
                     res.redirect('/');
                 });
             });
