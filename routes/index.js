@@ -22,6 +22,8 @@ exports.setRoutes = function(app) {
     app.post('/create-lesson', auth.requireLogin, lesson.save);
 
     app.get('/lessons', lesson.list);
+    app.get('/lessons/edit', auth.requireLogin, lesson.edit);
+    app.post('/lessons/edit', auth.requireLogin, lesson.update);
     app.get('/lessons/rate', auth.requireLogin, lesson.rate);
     app.post('/lessons/rate', auth.requireLogin, lesson.sendRating);
     app.get('/lessons/request', auth.requireLogin, lesson.requestForm);

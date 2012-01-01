@@ -16,3 +16,7 @@ p
   | Lessons:
   each les in lessons
     p= les.title
+    p
+      if req.loggedIn
+        if user.username == this_user.username
+          a(href="/lessons/edit?l="+les._id) Edit Lesson
