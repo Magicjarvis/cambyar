@@ -122,10 +122,21 @@ exports.page = function(req, res, next) {
                 if(!user) {
                     return;
                 } //some serious shit went down
-                lesson.author = user;
-                res.render('lesson', {
-                    'lesson': lesson,
-                });    
+                models.Rating.find({lesson: lesson._id}, function(err, ratings) {
+                    if (err) return next(err);
+                    async.reduce(ratings, 0, function(memo, item, cb) {
+                        cb(null, memo + item.value);
+                    }, function(err, result) {
+                        if (err) return next(err); 
+                        var rating = "Unrated";
+                        if (ratings.length >= 1) rating = result/ratings.length;
+                        lesson.author = user;
+                        res.render('lesson', {
+                            lesson: lesson,
+                            lesson_rating: rating,
+                        }); 
+                    }); 
+                });
             }); 
         }
     });
