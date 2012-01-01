@@ -10,7 +10,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var everyauth = require('everyauth');
-var md5 = require('MD5');
+var utils = require('./lib/utils');
 var routes = require('./routes');
 var auth = require('./lib/auth');
 
@@ -85,9 +85,7 @@ app.dynamicHelpers({
         return req;                                                              
     },
     email_hash: function(req, res) {
-        var url = 'http://www.gravatar.com/avatar/';
-        if(req.loggedIn) url+=md5(req.user.email);
-        return url;
+        return utils.gravatarURL(req.loggedIn ? req.user.email : "");
     },
     enc_url: function(req, res) {
         return encodeURIComponent(req.url);
