@@ -57,7 +57,7 @@ exports.save = function(req, res, next) {
         });    
         lesson.save(function(err) {
             if(err) return next(err);
-            res.redirect('/');
+            res.redirect('/lessons/' + lesson._id);
         });
         
     });
