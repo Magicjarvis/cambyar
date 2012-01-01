@@ -28,13 +28,12 @@ exports.create = function(req, res, next) {
 
 /*
  * POST request for creating a lesson
- *   redirects to '/' on successful DB save
+ *   redirects to lesson on successful DB save
  */
 exports.save = function(req, res, next) {
     tags = req.body.tags.split(',');
     async.map(tags, function(tag, cb) {
         var tag_lower = tag.toLowerCase();
-        var id;
         models.Tag.findOne({name: tag_lower}, function(err, results) {
             if(!results) {
                 var new_tag = new models.Tag({
@@ -222,6 +221,9 @@ exports.rate = function(req, res, next) {
     });
 }
 
+/*
+ * POST request for saving rating
+ */
 exports.sendRating = function(req, res, next) {
      models.Lesson.findById(req.query.l, function(err, lesson) {
         console.log(lesson)
@@ -256,6 +258,54 @@ exports.sendRating = function(req, res, next) {
                 });
             });
 
+        });
+    });
+}
+
+/*
+ * GET request on edit-lesson page
+ */
+exports.edit = function(req, res, next) {
+    models.Lesson.findById(req.query.l, function(err, lesson) {
+        if(err) return next(err);
+        if(!lesson) return res.send("No lesson found", 404);
+        if(String(lesson.user) !== String(req.user._id)) return res.send("You can't do this");
+        res.render('edit-lesson', {
+            'lesson': lesson,
+        });
+    });
+}
+
+/* 
+ * POST request for edit-lesson
+ */
+exports.update = function(req, res, next) {
+    var tags = req.body.tags.split(',');
+    async.map(tags, function(tag, cb){
+        var tag_lower = tag.toLowerCase();
+        models.Tag.findOne({name: tag_lower}, function(err, results) {
+            if(err) cb(err, null);
+            if(!results) {
+                var new_tag = new models.Tag({
+                    name: tag_lower,
+                });
+                new_tag.save(function(err) {
+                    if(err) cb(err, null);
+                    else cb(null,new_tag._id);
+                });
+            } else {
+                cb(null,results._id);
+            }
+        });
+    }, function(err, result) {
+        if(err) return next(err);
+        models.Lesson.update({_id: req.query.l, user: req.user._id}, {
+            'title': req.body.title,
+            'description': req.body.desc,
+            'tags': result,
+        }, function(err) {
+            if(err) return next(err);
+            res.redirect('/lessons/'+req.query.l);   
         });
     });
 }
