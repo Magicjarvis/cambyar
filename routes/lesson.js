@@ -64,48 +64,6 @@ exports.save = function(req, res, next) {
 
 
 /*
- * GET request on the search page
- */
-exports.list = function(req, res, next) {
-    models.Lesson.find({}, function(err, lessons) {
-        if(err) return next(err);
-        res.render('lessons', {
-            'lessons': lessons,
-        });
-    });
-}
-
-
-/*
- * POST request on search query
- *   Only searches through descripton at the moment
- */
-exports.search = function(req, res, next) {
-    var term = req.body.search_bar;
-    var regex = new RegExp(term,'i');
-    var results = [];
-    models.Lesson.find({description: regex}, function(err, primary) {
-        if(err) return next(err);
-        results = results.concat(primary);
-        async.map(results, function(lesson, cb) {
-            cb(null,lesson._id);
-        }, function(err, ids) {
-            if(err) next(err);
-            var terms = term.split(' ');
-            regex.compile('('+terms.join('|')+')','i');
-            models.Lesson.find({description: regex, _id: {$nin: ids}}, function(err,secondary) {
-                if(err) return next(err);
-                results = results.concat(secondary);
-                res.render('lessons', {
-                    'lessons': results,
-                });
-            });
-        });
-    });
-}
-
-
-/*
  * GET request on a lesson page
  */
 exports.page = function(req, res, next) {
@@ -122,10 +80,21 @@ exports.page = function(req, res, next) {
                 if(!user) {
                     return;
                 } //some serious shit went down
-                lesson.author = user;
-                res.render('lesson', {
-                    'lesson': lesson,
-                });    
+                models.Rating.find({lesson: lesson._id}, function(err, ratings) {
+                    if (err) return next(err);
+                    async.reduce(ratings, 0, function(memo, item, cb) {
+                        cb(null, memo + item.value);
+                    }, function(err, result) {
+                        if (err) return next(err); 
+                        var rating = "Unrated";
+                        if (ratings.length >= 1) rating = result/ratings.length;
+                        lesson.author = user;
+                        res.render('lesson', {
+                            lesson: lesson,
+                            lesson_rating: rating,
+                        }); 
+                    }); 
+                });
             }); 
         }
     });
@@ -146,7 +115,7 @@ exports.requestForm = function(req, res, next) {
             if(!user) return; //render something later?
 
             //Shouldn't happen unless user manually inputs URL
-            if(user.username === req.user.username) return res.redirect('/lessons'); 
+            if(user.username === req.user.username) return res.redirect('back'); 
             models.Request.findOne({
                 to: user._id,
                 from: req.user._id,
@@ -226,14 +195,11 @@ exports.rate = function(req, res, next) {
  */
 exports.sendRating = function(req, res, next) {
      models.Lesson.findById(req.query.l, function(err, lesson) {
-        console.log(lesson)
         if(err) {
             if(err.message !== 'Invalid ObjectId') return next(err)
         }
         if(!lesson) res.send('Nothing here', 404);
         models.User.findById(lesson.user, function(err, user) {
-
-            console.log(user);
             if(err) {
                 if(err.message !== 'Invalid ObjectId') return next(err)
             }
@@ -245,7 +211,6 @@ exports.sendRating = function(req, res, next) {
                 status: 'complete',
             }, function(err, requests) {
                 if(err) return next(err);
-                console.log(requests);
                 if(requests.length < 1) return res.send('You can\'t do this', 404)
                 models.Rating.update({
                     user: user._id, 
@@ -253,7 +218,6 @@ exports.sendRating = function(req, res, next) {
                     lesson: lesson._id, 
                 }, {value: req.body.scale}, {upsert: true}, function(err, rating) {
                     if(err) return next(err);
-                    console.log('logging: '+rating);
                     res.redirect('/');
                 });
             });

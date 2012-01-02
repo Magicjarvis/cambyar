@@ -1,5 +1,5 @@
-form(action='/lessons', method='POST')
-  input(type='text', name='search_bar')#search_bar
+form(action='/search', method='GET')
+  input(type='text', name='q')#search_bar
   input(type='submit', value='Search')
 each lesson in lessons
   .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
