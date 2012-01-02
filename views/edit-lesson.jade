@@ -6,9 +6,17 @@ form(action='/lessons/edit?l='+lesson._id, method='POST')
     input(type='text', name='title', value= lesson.title)#title
   p
     label(for='tags') Tags
-    input(type='text', name='tags', value= " ")#tags
+    input( name='tags', value=tags)#tags
   p
     label(for='desc') Description
     input(type='text', name='desc', value= lesson.description)#desc 
   p
     input(type='submit', value='Save Changes')
+
+
+script(type='text/javascript')
+    $(function() {
+        $('#tags').tagit({
+            availableTags: [#{all_tags}]
+        });
+    });
