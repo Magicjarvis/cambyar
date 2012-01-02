@@ -64,48 +64,6 @@ exports.save = function(req, res, next) {
 
 
 /*
- * GET request on the search page
- */
-exports.list = function(req, res, next) {
-    models.Lesson.find({}, function(err, lessons) {
-        if(err) return next(err);
-        res.render('lessons', {
-            'lessons': lessons,
-        });
-    });
-}
-
-
-/*
- * POST request on search query
- *   Only searches through descripton at the moment
- */
-exports.search = function(req, res, next) {
-    var term = req.body.search_bar;
-    var regex = new RegExp(term,'i');
-    var results = [];
-    models.Lesson.find({description: regex}, function(err, primary) {
-        if(err) return next(err);
-        results = results.concat(primary);
-        async.map(results, function(lesson, cb) {
-            cb(null,lesson._id);
-        }, function(err, ids) {
-            if(err) next(err);
-            var terms = term.split(' ');
-            regex.compile('('+terms.join('|')+')','i');
-            models.Lesson.find({description: regex, _id: {$nin: ids}}, function(err,secondary) {
-                if(err) return next(err);
-                results = results.concat(secondary);
-                res.render('lessons', {
-                    'lessons': results,
-                });
-            });
-        });
-    });
-}
-
-
-/*
  * GET request on a lesson page
  */
 exports.page = function(req, res, next) {
@@ -157,7 +115,7 @@ exports.requestForm = function(req, res, next) {
             if(!user) return; //render something later?
 
             //Shouldn't happen unless user manually inputs URL
-            if(user.username === req.user.username) return res.redirect('/lessons'); 
+            if(user.username === req.user.username) return res.redirect('back'); 
             models.Request.findOne({
                 to: user._id,
                 from: req.user._id,

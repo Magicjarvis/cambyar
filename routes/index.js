@@ -10,7 +10,7 @@ var auth = require('../lib/auth');
 var lesson = require('./lesson');
 var user = require('./user');
 var request = require('./request');
-
+var search = require('./search');
 /*
  * Sets all the routes
  *   Params: app
@@ -21,7 +21,6 @@ exports.setRoutes = function(app) {
     app.get('/create-lesson', auth.requireLogin,lesson.create);
     app.post('/create-lesson', auth.requireLogin, lesson.save);
 
-    app.get('/lessons', lesson.list);
     app.get('/lessons/edit', auth.requireLogin, lesson.edit);
     app.post('/lessons/edit', auth.requireLogin, lesson.update);
     app.get('/lessons/rate', auth.requireLogin, lesson.rate);
@@ -29,8 +28,9 @@ exports.setRoutes = function(app) {
     app.get('/lessons/request', auth.requireLogin, lesson.requestForm);
     app.post('/lessons/request', auth.requireLogin, lesson.sendRequest);
     app.get('/lessons/:id', lesson.page);
-    app.post('/lessons', lesson.search);
 
+    app.get('/search', search.search);
+    
     app.get('/user/edit-profile', auth.requireLogin, user.edit);
     app.post('/user/edit-profile', auth.requireLogin, user.update);
     app.get('/user/:username', user.view);   
