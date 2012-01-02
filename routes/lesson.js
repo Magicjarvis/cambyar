@@ -234,8 +234,28 @@ exports.edit = function(req, res, next) {
         if(err) return next(err);
         if(!lesson) return res.send("No lesson found", 404);
         if(String(lesson.user) !== String(req.user._id)) return res.send("You can't do this");
-        res.render('edit-lesson', {
-            'lesson': lesson,
+        models.Tag.find({_id : {$in: lesson.subjects}}, function(err, tags) {
+            if(err) return next(err);
+            models.Tag.find({}, function(err, all_tags){
+                if (err) return next(err);
+                async.map(tags, function(tag, cb) {
+                    cb(null, tag.name);
+                }, function(err, new_tags) {
+                    if (err) return next(err);
+                    async.map(all_tags, function(item, cb) {
+                        cb(null, "'" + item.name + "'");
+                    }, function(err, new_all_tags) {
+                        res.render('edit-lesson', {
+                            all_tags: new_all_tags,
+                            lesson: lesson,
+                            tags: new_tags,
+                        });
+
+
+                    });
+
+                });
+            });
         });
     });
 }
@@ -264,9 +284,9 @@ exports.update = function(req, res, next) {
     }, function(err, result) {
         if(err) return next(err);
         models.Lesson.update({_id: req.query.l, user: req.user._id}, {
-            'title': req.body.title,
-            'description': req.body.desc,
-            'tags': result,
+            title: req.body.title,
+            description: req.body.desc,
+            subjects: result,
         }, function(err) {
             if(err) return next(err);
             res.redirect('/lessons/'+req.query.l);   
