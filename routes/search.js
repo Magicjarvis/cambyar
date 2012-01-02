@@ -5,8 +5,10 @@
 var mongoose = require('mongoose');
 var async = require('async');
 var models = mongoose.models;
+
+
 /*
- * GET request on search query
+ * GET request on search query and type
  *   Only searches through descripton at the moment
  */
 exports.search = function(req, res, next) {
@@ -14,7 +16,16 @@ exports.search = function(req, res, next) {
         res.render('search', {
             lessons: [],
         });
+    } 
+    switch(req.query.a){
+        case 'tag':
+        default:
+            keyword(req, res, next);
     }
+
+}
+
+function keyword(req, res, next) {
     var term = decodeURIComponent(req.query.q);
     var regex = new RegExp(term,'i');
     var results = [];
