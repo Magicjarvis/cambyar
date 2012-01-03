@@ -3,6 +3,9 @@ h2= lesson.title
 h3
   a(href='/user/'+lesson.author.username)= lesson.author.username
 p= lesson.description
+ul Tags
+  each tag in tags
+    li= tag.name
 p= lesson_rating
 if !req.loggedIn || req.user.username !== lesson.author.username
   p

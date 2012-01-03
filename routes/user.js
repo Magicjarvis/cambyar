@@ -45,10 +45,30 @@ exports.edit = function(req, res, next) {
         if (err) return next(err);
         models.Tag.find({_id: {$in: req.user.expertise}}, function(err, expertise) {
             if(err) return next(err);
-            res.render('edit-profile', {
-                'interests': interests,
-                'expertise': expertise,
-            });
+            models.Tag.find({}, function(err, all) {
+                if(err) return next(err);
+                async.map(interests, function(interest, cb) {
+                    cb(null, interest.name);
+                }, function(err, new_interests) {
+                    if(err) return next(err);
+                    async.map(expertise, function(subject, cb) {
+                        cb(null, subject.name);
+                    }, function(err, new_expertise) {
+                        if(err) return next(err);
+                        async.map(all, function(tag, cb) {
+                            cb(null, "'" + tag.name + "'")
+                        }, function(err, all_tags) {
+                            if(err) return next(err);
+                            res.render('edit-profile', {
+                                interests: new_interests,
+                                expertise: new_expertise,               
+                                tags: all_tags,
+                            });
+                        });
+                    });
+
+                });
+            }); 
         });
 
     });

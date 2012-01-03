@@ -18,6 +18,8 @@ html
             img(src=email_hash + '?s=30')                                                          
           li
             a(href='/user/#{user.username}') #{user.name.first}
+          li
+            a(href='/requests') #{req.user.notifications}
           li                                                                              
             a(href='/logout', title='Leave us') Logout                                   
         else                                                                             

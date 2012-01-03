@@ -12,15 +12,20 @@ form(action='/user/edit-profile', method='POST')
     input(type='text', name='email', value= user.email)#email
   p
     label(for='interests') Interests
-    input(type='text', name='interests')#interests
-    | Current: 
-    each i in interests
-      p= i.name
+    input(type='text', name='interests', value= interests)#interests
   p
     label(for='expertise') Expertise
-    input(type='text', name='expertise')#expertise
-    | Current:
-    each e in expertise
-      p= e.name
+    input(type='text', name='expertise', value=expertise)#expertise
   p
     input(type='submit', value='Save Changes')
+
+script(type='text/javascript')
+    $(function() {
+        var all_tags = [#{tags}];
+        $('#interests').tagit({
+            availableTags: all_tags
+        });
+        $('#expertise').tagit({
+            availableTags: all_tags
+        });
+    });

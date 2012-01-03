@@ -88,11 +88,15 @@ exports.page = function(req, res, next) {
                         if (err) return next(err); 
                         var rating = "Unrated";
                         if (ratings.length >= 1) rating = result/ratings.length;
-                        lesson.author = user;
-                        res.render('lesson', {
-                            lesson: lesson,
-                            lesson_rating: rating,
-                        }); 
+                        models.Tag.find({_id : {$in : lesson.subjects}}, function(err, tags){
+                            if(err) return next(err); 
+                            lesson.author = user;
+                            res.render('lesson', {
+                                lesson: lesson,
+                                lesson_rating: rating,
+                                tags: tags,
+                            }); 
+                        });
                     }); 
                 });
             }); 
