@@ -4,8 +4,8 @@
  */
 var async = require('async');
 var mongoose = require('mongoose');
+var utils = require('../lib/utils')
 var models = mongoose.models;
-
 /*
  * GET request for user profile
  */
@@ -27,6 +27,8 @@ exports.view = function(req, res, next) {
                         'this_user': user,
                         'lessons': lessons,
                         'rating': rating,
+                        'gravatarURL': utils.gravatarURL(user.email),
+                        'ratingTotals': ratings.length,
                     });
                 });
             });

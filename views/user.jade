@@ -5,6 +5,8 @@ if req.loggedIn
     p 
       a(href='/requests') Pending Requests
 p
+  img(src=gravatarURL+'?s=130', value=this_user.name.first) 
+p
   | Username: #{this_user.username}
 p
   | E-Mail: #{this_user.email}

@@ -1,19 +1,18 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-top: 40px;
+  background: #eee;
 }
 
-a {
-  color: #00B7FF;
+.topbar img  {
+  padding-top: 5px;
 }
 
-.topbar li {
-  display: inline;
-  list-style-type: none;
-  padding-right: 20px;
+.content {
+  background: #fff;
+  padding: 30px 20px 20px;
+  border: 1px #ddd solid;
 }
 
 .lesson {
-    background-color: #cccccc;
-    cursor: pointer;
+  cursor: pointer;
 }
