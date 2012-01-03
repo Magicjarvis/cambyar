@@ -19,6 +19,8 @@ exports.search = function(req, res, next) {
     } 
     switch(req.query.a){
         case 'tag':
+            tag(req, res, next);
+            break;
         default:
             keyword(req, res, next);
     }
@@ -49,3 +51,23 @@ function keyword(req, res, next) {
     });
 }
 
+function tag(req, res, next) {
+    var terms = decodeURIComponent(req.query.q);
+    var terms = terms.split(",");
+    models.Tag.find({name: {$in: terms}}, function(err, tags) {
+        if (err) return next(err);
+        async.map(tags, function(tag, cb) {
+            cb(null, tag._id);
+        }, function(err, result) {
+            if(err) return next(err);
+            models.Lesson.find({subjects: {$in: result}}, function(err, lessons) {
+                if(err) return next(err);
+                res.render('search', {
+                    lessons: lessons,
+                });
+
+            });
+        });
+    });
+
+}
