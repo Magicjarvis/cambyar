@@ -1,11 +1,28 @@
+if req.loggedIn && req.user.username == lesson.author.username
+  .top-right
+    a(href='/lessons/edit?l=' + lesson._id).btn.info Edit Lesson
+.page-header
+  .inside
+    h1= lesson.title
+.row
+  .span12
+    .inside
+      p
+        each tag in tags
+          a(href="/search?a=tag&q="+tag.name) #{tag.name}, 
+      p= lesson.description
+      p 
+        strong Rating: #{lesson_rating}
+      if !req.loggedIn || req.user.username !== lesson.author.username
+        #teachme_center
+          a(href='/lessons/request?l='+lesson._id).btn.large.success Teach me!
 
-h2= lesson.title
-h3
-  a(href='/user/'+lesson.author.username)= lesson.author.username
-p= lesson.description
-p= lesson_rating
-if !req.loggedIn || req.user.username !== lesson.author.username
-  p
-    a(href='/lessons/request?l='+lesson._id) Teach me!
+  .span4
+    .inside
+      h3.bottombar About the Teacher
+      img(src=utils.gravatarURL(lesson.author.email)+'?s=150').profile 
+      h4
+        a(href='/user/'+lesson.author.username)= lesson.author.username
+
 p
   a(href='/lessons/rate?l='+lesson._id) Rate (This link will not be here normally)

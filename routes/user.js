@@ -13,28 +13,34 @@ exports.view = function(req, res, next) {
     models.User.findOne({username: req.params.username}, function(err, user) {
         if(err) return next(err);
         if(!user) return res.send('User Doesn\'t exist', 404);
-        models.Lesson.find({user: user._id}, function(err, lessons) {
-            if (err) return next(err);
-            models.Rating.find({user: user._id}, function(err, ratings) {
+        models.Tag.find({_id: {$in: user.interests}}, function(err, interests) {
+            if(err) return next(err);
+            models.Tag.find({_id: {$in: user.expertise}}, function(err, expertise) {
                 if(err) return next(err);
-                async.reduce(ratings, 0, function(memo, item, cb) {
-                  cb(null, memo + item.value);  
-                }, function(err, result) {
+                models.Lesson.find({user: user._id}, function(err, lessons) {
                     if (err) return next(err);
-                    var rating = 0;
-                    if (ratings.length >= 1) rating = result/(ratings.length);
-                    res.render('user', {
-                        'this_user': user,
-                        'lessons': lessons,
-                        'rating': rating,
-                        'gravatarURL': utils.gravatarURL(user.email),
-                        'ratingTotals': ratings.length,
+                    models.Rating.find({user: user._id}, function(err, ratings) {
+                        if(err) return next(err);
+                        async.reduce(ratings, 0, function(memo, item, cb) {
+                          cb(null, memo + item.value);  
+                        }, function(err, result) {
+                            if (err) return next(err);
+                            var rating = 'Unrated';
+                            if (ratings.length >= 1) rating = result/(ratings.length);
+                            res.render('user', {
+                                'this_user': user,
+                                'lessons': lessons,
+                                'rating': rating,
+                                'gravatarURL': utils.gravatarURL(user.email),
+                                'ratingTotals': ratings.length,
+                                'interests': interests,
+                                'expertise': expertise,
+                            });
+                        });
                     });
                 });
             });
-
-        });
-        
+        });        
     });
 }
 
@@ -47,10 +53,30 @@ exports.edit = function(req, res, next) {
         if (err) return next(err);
         models.Tag.find({_id: {$in: req.user.expertise}}, function(err, expertise) {
             if(err) return next(err);
-            res.render('edit-profile', {
-                'interests': interests,
-                'expertise': expertise,
-            });
+            models.Tag.find({}, function(err, all) {
+                if(err) return next(err);
+                async.map(interests, function(interest, cb) {
+                    cb(null, interest.name);
+                }, function(err, new_interests) {
+                    if(err) return next(err);
+                    async.map(expertise, function(subject, cb) {
+                        cb(null, subject.name);
+                    }, function(err, new_expertise) {
+                        if(err) return next(err);
+                        async.map(all, function(tag, cb) {
+                            cb(null, "'" + tag.name + "'")
+                        }, function(err, all_tags) {
+                            if(err) return next(err);
+                            res.render('edit-profile', {
+                                interests: new_interests,
+                                expertise: new_expertise,               
+                                tags: all_tags,
+                            });
+                        });
+                    });
+
+                });
+            }); 
         });
 
     });

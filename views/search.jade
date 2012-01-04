@@ -3,7 +3,7 @@
     .inside
       form(action='/search', method='GET')
         input(type='text', name='q')#search_bar
-        input(type='submit', value='Search')
+        input(type='submit', value='Search').btn.primary
       each lesson in lessons
         .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
           h3= lesson.title + '  ' 

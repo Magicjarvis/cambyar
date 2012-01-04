@@ -19,6 +19,9 @@ html
             strong Cambyar
           ul.nav.secondary-nav
             if req.loggedIn                                                                      
+              li
+                if req.user.notifications > 0
+                  a(href='/requests') #{req.user.notifications}
               li                                                                       
                 img(src=email_hash + '?s=30')                                                          
               li
@@ -33,3 +36,7 @@ html
 
     .container
       .content!= body
+
+    footer.footer
+      .container
+        p Apptidudes will put stuff here

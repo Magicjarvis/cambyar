@@ -1,29 +1,59 @@
+if req.loggedIn && user.username == this_user.username
+  .top-right
+    a(href='/user/edit-profile/').btn.info Edit Profile
+
+.page-header
+  .inside
+    h1
+      | #{utils.capitalize(this_user.username)} (#{this_user.name.full})
 .row
   .span4
-    if req.loggedIn
-      if user.username == this_user.username
+    .inside
+      img(src=gravatarURL+'?s=210', value=this_user.name.first).profile 
+      if req.loggedIn && user.username == this_user.username
+        .gravatar
+          p 
+            | We're using your email 
+            em= user.email
+            |  at
+            a(href="http://gravatar.com") Gravatar!
+            |  To change your profile picture click
+            a(href="http://gravatar.com/emails") here.
+
+      h2 Rating: #{rating}
+      if req.loggedIn && user.username == this_user.username
         p
-          a(href='/user/edit-profile/') Edit Profile
-        p 
-          a(href='/requests') Pending Requests
-    p
-      img(src=gravatarURL+'?s=130', value=this_user.name.first) 
-  .span12
-    p
-      | Username: #{this_user.username}
-    p
-      | E-Mail: #{this_user.email}
-    p
-      | Name: #{this_user.name.first}
-    p
-      | Rating: #{rating}
-.row
-  .span16
-    p
-      | Lessons:
-      each les in lessons
-        p= les.title
-        p
-          if req.loggedIn
-            if user.username == this_user.username
-              a(href="/lessons/edit?l="+les._id) Edit Lesson
+          a(href='/requests').btn Pending Requests (#{user.notifications})
+  .span10
+    .inside
+      p.
+        Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it? Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical helicopter that shakes when you put quarters in it? No? Well, that's what you see at a toy store. And you must think you're in a toy store, because you're here shopping for an infant named Jeb.
+      if lessons.length >=1 
+        h2.bottombar Lessons
+        each les in lessons
+          .lesson
+            .left-lesson-pane(onclick="location.href='/lessons/"+les._id+"';")   
+              h3= les.title
+              p= les.description
+            .right-lesson-pane
+              if req.loggedIn && user.username == this_user.username
+                a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
+                a(href="/lessons/delete?l="+les._id).btn.danger.delete X
+  .span2
+    .inside
+      h3.bottombar Interests
+      p
+        each interest in interests
+          a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
+      h3.bottombar Expertise
+      p
+        each subject in expertise
+          a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
+
+script
+  $(function(){
+    $('.delete').click(function (){
+        return confirm("Are you sure?")
+    });
+
+  });
