@@ -93,6 +93,9 @@ app.dynamicHelpers({
     flash: function(req, res) {
         return req.flash();     
     },
+    utils: function(req, res) {
+        return utils;      
+    },
 });  
 
 // Set routes

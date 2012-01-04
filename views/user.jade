@@ -1,22 +1,29 @@
-if req.loggedIn
-  if user.username == this_user.username
+.row
+  .span4
+    if req.loggedIn
+      if user.username == this_user.username
+        p
+          a(href='/user/edit-profile/') Edit Profile
+        p 
+          a(href='/requests') Pending Requests
     p
-      a(href='/user/edit-profile/') Edit Profile
-    p 
-      a(href='/requests') Pending Requests
-p
-  | Username: #{this_user.username}
-p
-  | E-Mail: #{this_user.email}
-p
-  | Name: #{this_user.name.first}
-p
-  | Rating: #{rating}
-p
-  | Lessons:
-  each les in lessons
-    p= les.title
+      img(src=gravatarURL+'?s=130', value=this_user.name.first) 
+  .span12
     p
-      if req.loggedIn
-        if user.username == this_user.username
-          a(href="/lessons/edit?l="+les._id) Edit Lesson
+      | Username: #{this_user.username}
+    p
+      | E-Mail: #{this_user.email}
+    p
+      | Name: #{this_user.name.first}
+    p
+      | Rating: #{rating}
+.row
+  .span16
+    p
+      | Lessons:
+      each les in lessons
+        p= les.title
+        p
+          if req.loggedIn
+            if user.username == this_user.username
+              a(href="/lessons/edit?l="+les._id) Edit Lesson

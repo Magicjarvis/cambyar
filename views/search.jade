@@ -1,8 +1,10 @@
-form(action='/search', method='GET')
-  input(type='text', name='q')#search_bar
-  input(type='submit', value='Search')
-each lesson in lessons
-  .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
-    p
-      h3= lesson.title
-    p= lesson.description
+.row
+  .span16
+    .inside
+      form(action='/search', method='GET')
+        input(type='text', name='q')#search_bar
+        input(type='submit', value='Search')
+      each lesson in lessons
+        .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
+          h3= lesson.title + '  ' 
+           small= lesson.description
