@@ -45,3 +45,12 @@ body {
   border-bottom: 1px solid #BBB;
   margin-bottom: 15px;
 }
+
+.top-right {
+    float: right;
+    padding-right: 40px;
+}
+#teachme_center {
+  margin: 0 auto;
+  text-align: center;
+}

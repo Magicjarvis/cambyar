@@ -25,7 +25,7 @@ exports.view = function(req, res, next) {
                           cb(null, memo + item.value);  
                         }, function(err, result) {
                             if (err) return next(err);
-                            var rating = 0;
+                            var rating = 'Unrated';
                             if (ratings.length >= 1) rating = result/(ratings.length);
                             res.render('user', {
                                 'this_user': user,

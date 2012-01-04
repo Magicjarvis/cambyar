@@ -1,3 +1,7 @@
+if req.loggedIn && user.username == this_user.username
+  .top-right
+    a(href='/user/edit-profile/').btn.info Edit Profile
+
 .page-header
   .inside
     h1
@@ -18,7 +22,6 @@
 
       h2 Rating: #{rating}
       if req.loggedIn && user.username == this_user.username
-        a(href='/user/edit-profile/').btn Edit Profile
         p
           a(href='/requests').btn Pending Requests
   .span10
@@ -38,7 +41,7 @@
       h3.bottombar Interests
       p
         each interest in interests
-          a(href="/search?a=tag?q="+interest.name) #{interest.name}, 
+          a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
       h3.bottombar Expertise
       p
         each subject in expertise
