@@ -23,7 +23,7 @@ if req.loggedIn && user.username == this_user.username
       h2 Rating: #{rating}
       if req.loggedIn && user.username == this_user.username
         p
-          a(href='/requests').btn Pending Requests
+          a(href='/requests').btn Pending Requests (#{user.notifications})
   .span10
     .inside
       p.
@@ -32,10 +32,12 @@ if req.loggedIn && user.username == this_user.username
         h2.bottombar Lessons
         each les in lessons
           .lesson(onclick="location.href='/lessons/"+les._id+"';")   
-            h3= les.title
-            p= les.description
-            if req.loggedIn && user.username == this_user.username
-              a(href="/lessons/edit?l="+les._id).btn Edit Lesson
+            .left-lesson-pane
+              h3= les.title
+              p= les.description
+            .right-lesson-pane
+              if req.loggedIn && user.username == this_user.username
+                a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
   .span2
     .inside
       h3.bottombar Interests

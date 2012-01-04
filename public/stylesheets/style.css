@@ -54,3 +54,12 @@ body {
   margin: 0 auto;
   text-align: center;
 }
+
+.right-lesson-pane {
+  display: inline-block;
+}
+
+.left-lesson-pane {
+  display: inline-block;
+  width: 400px;
+}
