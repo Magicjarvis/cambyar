@@ -9,10 +9,20 @@ body {
 
 .content {
   background: #fff;
-  padding: 30px 20px 20px;
-  border: 1px #ddd solid;
+  padding: 30px 0px 0px;
+  outline: 1px #ddd solid;
+  margin: 0 -20px;
 }
-
+.inside {
+  margin-left: 20px;
+}
 .lesson {
   cursor: pointer;
+  padding-left: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.lesson:hover {
+  margin-left: -2px;
+  border-left: 2px solid #eee;
 }
