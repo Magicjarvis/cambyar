@@ -26,8 +26,7 @@ if req.loggedIn && user.username == this_user.username
           a(href='/requests').btn Pending Requests (#{user.notifications})
   .span10
     .inside
-      p.
-        Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it? Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical helicopter that shakes when you put quarters in it? No? Well, that's what you see at a toy store. And you must think you're in a toy store, because you're here shopping for an infant named Jeb.
+      p= this_user.bio
       if lessons.length >=1 
         h2.bottombar Lessons
         each les in lessons
@@ -44,12 +43,18 @@ if req.loggedIn && user.username == this_user.username
     .inside
       h3.bottombar Interests
       p
-        each interest in interests
-          a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
+        if interests.length == 0
+          | None!
+        else
+          each interest in interests
+            a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
       h3.bottombar Expertise
       p
-        each subject in expertise
-          a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
+        if expertise.length == 1
+          | None!
+        else
+          each subject in expertise
+            a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
 
 script
   $(function(){

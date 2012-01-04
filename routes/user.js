@@ -126,6 +126,7 @@ exports.update = function(req, res, next) {
                             'last':  req.body.name_last,
                         },
                         'email': req.body.email,
+                        'bio': req.body.bio,
                         'interests': interest_ids,
                         'expertise': expert_ids,
                     }, function (err) {
