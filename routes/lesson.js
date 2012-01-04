@@ -297,3 +297,16 @@ exports.update = function(req, res, next) {
         });
     });
 }
+
+exports.delete = function(req, res, next) {
+    var id = req.query.l;
+    models.Lesson.remove({_id: id, user: req.user.id}, function(err) {
+        if (err) return next(err);
+        models.Request.remove({lesson: id, to: req.user.id}, function(err) {
+            if (err) return next(err);
+            res.redirect('back');
+        });
+
+    });
+
+}

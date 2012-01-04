@@ -31,13 +31,14 @@ if req.loggedIn && user.username == this_user.username
       if lessons.length >=1 
         h2.bottombar Lessons
         each les in lessons
-          .lesson(onclick="location.href='/lessons/"+les._id+"';")   
-            .left-lesson-pane
+          .lesson
+            .left-lesson-pane(onclick="location.href='/lessons/"+les._id+"';")   
               h3= les.title
               p= les.description
             .right-lesson-pane
               if req.loggedIn && user.username == this_user.username
                 a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
+                a(href="/lessons/delete?l="+les._id).btn.danger.delete X
   .span2
     .inside
       h3.bottombar Interests
@@ -49,3 +50,10 @@ if req.loggedIn && user.username == this_user.username
         each subject in expertise
           a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
 
+script
+  $(function(){
+    $('.delete').click(function (){
+        return confirm("Are you sure?")
+    });
+
+  });
