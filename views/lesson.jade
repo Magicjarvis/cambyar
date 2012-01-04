@@ -9,6 +9,6 @@ ul Tags
 p= lesson_rating
 if !req.loggedIn || req.user.username !== lesson.author.username
   p
-    a(href='/lessons/request?l='+lesson._id) Teach me!
+    a(href='/lessons/request?l='+lesson._id).btn Teach me!
 p
   a(href='/lessons/rate?l='+lesson._id) Rate (This link will not be here normally)

@@ -13,16 +13,35 @@ body {
   outline: 1px #ddd solid;
   margin: 0 -20px;
 }
+
 .inside {
   margin-left: 20px;
 }
+
 .lesson {
   cursor: pointer;
   padding-left: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #AAA;
 }
 
 .lesson:hover {
   margin-left: -2px;
-  border-left: 2px solid #eee;
+  border-left: 2px solid #AAA;
+}
+
+.profile {
+  border: 1px solid #AAA;
+  padding: 5px;
+}
+
+.gravatar {
+  background-color: #DDD;
+  padding: 5px;
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+.bottombar {
+  border-bottom: 1px solid #BBB;
+
 }
