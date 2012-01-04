@@ -57,9 +57,15 @@ body {
 
 .right-lesson-pane {
   display: inline-block;
+  text-align: center;
 }
 
 .left-lesson-pane {
   display: inline-block;
   width: 400px;
+}
+
+.vert-center{
+  display: table-cell;
+  vertical-align: middle;
 }

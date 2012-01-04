@@ -37,8 +37,9 @@ if req.loggedIn && user.username == this_user.username
               p= les.description
             .right-lesson-pane
               if req.loggedIn && user.username == this_user.username
-                a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
-                a(href="/lessons/delete?l="+les._id).btn.danger.delete X
+                .vert-center
+                  a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
+                  a(href="/lessons/delete?l="+les._id).btn.danger#delete X
   .span2
     .inside
       h3.bottombar Interests
@@ -52,7 +53,7 @@ if req.loggedIn && user.username == this_user.username
 
 script
   $(function(){
-    $('.delete').click(function (){
+    $('#delete').click(function (){
         return confirm("Are you sure?")
     });
 
