@@ -21,7 +21,8 @@ html
             if req.loggedIn                                                                      
               li
                 if req.user.notifications > 0
-                  a(href='/requests') #{req.user.notifications}
+                  strong
+                    a(href='/requests') #{req.user.notifications}
               li                                                                       
                 img(src=email_hash + '?s=30')                                                          
               li

@@ -1,17 +1,35 @@
-h2 Pending Requests
+.page-header
+  .inside
+    h1 Requests
+.row
+  .span8
+    .inside
+      h2.bottombar Pending Requests
 
-each r in pending
-  p= r.message
-  p
-    a(href='/requests/action?a=accept&r=#{r.id}') Accept  
-    a(href='/requests/action?a=remove&r=#{r.id}') Deny
+      each r in pending
+        .request
+          .left-request-pane
+            h4
+              a(href='/user/'+r.sender.username) #{r.sender.username}
+            p= r.message
+          .right-request-pane
+            .vert-center
+              a(href='/requests/action?a=accept&r=#{r.id}').btn.primary Accept  
+              a(href='/requests/action?a=remove&r=#{r.id}').btn.danger Deny
 
-h2 Lessions in Session
+  .span8
+    .inside
+      h2.bottombar Lessions in Session
 
-each r in in_session
-  p= r.message
-  p
-    a(href='/requests/action?a=complete&r=#{r.id}') Complete
-    a(href='/requests/action?a=stale&r=#{r.id}') Deny
+      each r in in_session
+        .request
+          .left-request-pane
+            h4
+              a(href='/user/'+r.sender.username) #{r.sender.username}
+            p= r.message
+          .right-request-pane
+            .vert-center
+              a(href='/requests/action?a=complete&r=#{r.id}').btn.primary Complete
+              a(href='/requests/action?a=stale&r=#{r.id}').btn.danger Deny
 
     

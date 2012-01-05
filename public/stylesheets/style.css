@@ -57,9 +57,29 @@ body {
 
 .right-lesson-pane {
   display: inline-block;
+  text-align: center;
 }
 
 .left-lesson-pane {
   display: inline-block;
-  width: 400px;
+  width: 445px;
+}
+
+.vert-center{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.request {
+  padding-left: 10px;
+}
+
+.right-request-pane {
+  display: inline-block;
+  text-align: center;
+}
+
+.left-request-pane {
+  display: inline-block;
+  width: 285px;
 }

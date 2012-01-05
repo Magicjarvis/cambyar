@@ -11,6 +11,9 @@ form(action='/user/edit-profile', method='POST')
     label(for='email') E-mail 
     input(type='text', name='email', value= user.email)#email
   p
+    label(for='bio') Bio
+    textarea(type='text', name='bio')#bio #{user.bio}
+  p
     label(for='interests') Interests
     input(type='text', name='interests', value= interests)#interests
   p

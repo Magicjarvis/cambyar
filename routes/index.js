@@ -36,6 +36,7 @@ exports.setRoutes = function(app) {
     app.post('/user/edit-profile', auth.requireLogin, user.update);
     app.get('/user/:username', user.view);   
 
+    app.get('/requested', auth.requireLogin, request.requestedLessons);
     app.get('/requests', auth.requireLogin, request.list);
     app.get('/requests/action', auth.requireLogin, request.action);
 };
