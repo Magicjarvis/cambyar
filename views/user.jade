@@ -23,11 +23,10 @@ if req.loggedIn && user.username == this_user.username
       h2 Rating: #{rating}
       if req.loggedIn && user.username == this_user.username
         p
-          a(href='/requests').btn Pending Requests (#{user.notifications})
+          a(href='/requested').btn Sent Requests 
   .span10
     .inside
-      p.
-        Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it? Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical helicopter that shakes when you put quarters in it? No? Well, that's what you see at a toy store. And you must think you're in a toy store, because you're here shopping for an infant named Jeb.
+      p= this_user.bio
       if lessons.length >=1 
         h2.bottombar Lessons
         each les in lessons
@@ -37,22 +36,29 @@ if req.loggedIn && user.username == this_user.username
               p= les.description
             .right-lesson-pane
               if req.loggedIn && user.username == this_user.username
-                a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
-                a(href="/lessons/delete?l="+les._id).btn.danger.delete X
+                .vert-center
+                  a(href="/lessons/edit?l="+les._id).btn.small.info Edit Lesson
+                  a(href="/lessons/delete?l="+les._id).btn.small.danger#delete X
   .span2
     .inside
       h3.bottombar Interests
       p
-        each interest in interests
-          a(href="/search?a=tag&q="+interest.name).taglink #{interest.name} 
+        if interests.length == 0
+          | None!
+        else
+          each interest in interests
+            a(href="/search?a=tag&q="+interest.name).taglink #{interest.name} 
       h3.bottombar Expertise
       p
-        each subject in expertise
-          a(href="/search?a=tag?q="+subject.name).taglink #{subject.name} 
+        if expertise.length == 0
+          | None!
+        else
+          each subject in expertise
+            a(href="/search?a=tag?q="+subject.name).taglink #{subject.name} 
 
 script
   $(function(){
-    $('.delete').click(function (){
+    $('#delete').click(function (){
         return confirm("Are you sure?")
     });
 
