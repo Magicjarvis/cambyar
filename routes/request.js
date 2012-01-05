@@ -125,3 +125,19 @@ function stale(req, res, next) {
         res.redirect('/requests');
     });
 }
+
+exports.requestedLessons = function(req, res, next) {
+    models.Request.find({from: req.user._id}, function(err, requests) {
+        if (err) return next(err);
+        async.map(requests, function(request, cb) {
+            cb(null, request.lesson);
+        }, function(err, request_ids) {
+            models.Lesson.find({_id: {$in: request_ids}}, function(err, lessons) {
+                if(err) return next(err);
+                res.render('sent-requests', {
+                    lessons: lessons
+                });
+            });
+        });
+    });
+}
