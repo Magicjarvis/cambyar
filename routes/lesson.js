@@ -156,15 +156,16 @@ exports.sendRequest = function(req, res, next) {
        
         request.save(function(err) {
             if(err) return next(err);
-            models.User.findById(lesson.user, function(err, user) {
+            models.User.findOne({_id: lesson.user, alerts: true }, function(err, user) {
                 if (err) return next(err);
-                if (!user) return res.send('No teacher for this lesson', 404); 
-                utils.sendEmail(user.email, './public/email/request.txt', {
-                    'subject': 'Pending Requst at Cambyar',
-                    'username': user.username,
-                    'response_url': '/requests',
-                    'edit_url': '/edit-profile' 
-                });
+                if (user) {
+                    utils.sendEmail(user.email, './public/email/request.txt', {
+                        'subject': 'Pending Requst at Cambyar',
+                        'username': user.username,
+                        'response_url': '/requests',
+                        'edit_url': '/edit-profile' 
+                    });
+                }
                 res.redirect('/lessons/'+lesson._id);
             });
         });

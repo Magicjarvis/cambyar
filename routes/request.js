@@ -95,20 +95,21 @@ function complete(req, res, next) {
         status: 'in_session'
     }, function(err, request) {
         if (err) return next(err);
-        if (!request) return res.redirect('/requests');
+        if (!request) return res.redirect('back');
         request.status = 'complete';
         request.save(function(err) {
             if (err) return next(err);
-            models.User.findById(request.from, function(err, user) {
+            models.User.findOne({_id: request.from, alerts: true}, function(err, user) {
                 if (err) return next(err);
-                if (!user) return res.redirect('/requests');
-                utils.sendEmail(user.email, './public/email/rate.txt',{
-                    subject: 'Please Rate',
-                    username: user.username,
-                    rate_url: 'localhost:3000/lesson/rate?l='+request.lesson,
-                    edit_url: 'localhost:3000/edit-profile'
-                });
-                res.redirect('/requests');
+                if (user) {
+                    utils.sendEmail(user.email, './public/email/rate.txt',{
+                        subject: 'Please Rate',
+                        username: user.username,
+                        rate_url: 'localhost:3000/lesson/rate?l='+request.lesson,
+                        edit_url: 'localhost:3000/edit-profile'
+                    });
+                }
+                res.redirect('back');
             });
         });
     });
