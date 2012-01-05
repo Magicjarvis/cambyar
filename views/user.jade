@@ -47,14 +47,14 @@ if req.loggedIn && user.username == this_user.username
           | None!
         else
           each interest in interests
-            a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
+            a(href="/search?a=tag&q="+interest.name).taglink #{interest.name} 
       h3.bottombar Expertise
       p
         if expertise.length == 0
           | None!
         else
           each subject in expertise
-            a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
+            a(href="/search?a=tag?q="+subject.name).taglink #{subject.name} 
 
 script
   $(function(){

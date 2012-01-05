@@ -83,3 +83,18 @@ body {
   display: inline-block;
   width: 285px;
 }
+
+.taglink {
+  background: #DEE7F8; 
+  border: 1px solid #CAD8F3; 
+  text-decoration: none; 
+  padding: 1px; 
+  cursor: pointer; 
+  line-height: 22px; 
+  margin: 2px; 
+}
+.taglink:hover {
+  background: #bbcef1;
+  border-color: #6d95e0;
+  text-decoration: none;
+}
