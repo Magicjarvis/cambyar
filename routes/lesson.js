@@ -232,6 +232,41 @@ exports.sendRating = function(req, res, next) {
 }
 
 /*
+ * GET request on the unrated page
+ */
+exports.unrated = function(req, res, next) {
+    models.Request.find({from: req.user._id, status: 'complete'}, function(err, requests) {
+        if(err) return next(err);
+        async.map(requests, function(request, cb) {
+            models.Rating.findOne({lesson: request.lesson}, function(err, rating) {
+                if(err) cb(err, null);
+                if(!rating) {
+                   cb(null, request.lesson);
+                } else {
+                   cb(null, undefined);
+                } 
+            });
+        }, function(err, lesson_ids) {
+            if(err) return next(err);
+            async.filter(lesson_ids, function(id, cb) {
+                if(id) {
+                    cb(true);
+                } else {
+                    cb(false);
+                }
+            }, function(filtered) {
+                models.Lesson.find({_id: {$in: filtered}}, function(err, lessons) {
+                    if(err) return next(err);
+                    res.render('unrated', {
+                        lessons: lessons,
+                    });
+                });
+            });
+        });
+    });
+}
+
+/*
  * GET request on edit-lesson page
  */
 exports.edit = function(req, res, next) {
