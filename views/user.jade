@@ -44,11 +44,11 @@ if req.loggedIn && user.username == this_user.username
       h3.bottombar Interests
       p
         each interest in interests
-          a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
+          a(href="/search?a=tag&q="+interest.name).taglink #{interest.name} 
       h3.bottombar Expertise
       p
         each subject in expertise
-          a(href="/search?a=tag?q="+subject.name) #{subject.name}, 
+          a(href="/search?a=tag?q="+subject.name).taglink #{subject.name} 
 
 script
   $(function(){
