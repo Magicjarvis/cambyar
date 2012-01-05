@@ -2,7 +2,7 @@
  * request.js
  *   Reqest routes
  */
-
+var async = require('async');
 var models = require('../lib/models');
 var utils = require('../lib/utils');
 
@@ -14,9 +14,27 @@ exports.list = function(req, res, next) {
         if (err) return next(err);
         models.Request.find({to: req.user._id, status: 'in_session'}, function(err, sessions) {
             if (err) return next(err);
-            res.render('requests', {
-                'in_session': sessions,
-                'pending': pending,
+            async.map(pending, function(request, cb) {
+                models.User.findOne({_id: request.from}, function(err, user) {
+                    if(err) return cb(err, null);
+                    request.sender = user;
+                    cb(null, request);
+                });
+            }, function(err, pendings) {
+                if(err) return next(err);
+                async.map(sessions, function(session, cb) {
+                    models.User.findOne({_id: session.from}, function(err, user) {
+                        if(err) return cb(err, null);
+                        session.sender = user;
+                        cb(null, session);
+                    });
+                }, function(err, sessions) {
+                    if(err) return next(err);
+                    res.render('requests', {
+                        'in_session': sessions,
+                        'pending': pendings,
+                    });
+                });
             });
         });
     });

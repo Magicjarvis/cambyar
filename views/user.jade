@@ -37,8 +37,8 @@ if req.loggedIn && user.username == this_user.username
             .right-lesson-pane
               if req.loggedIn && user.username == this_user.username
                 .vert-center
-                  a(href="/lessons/edit?l="+les._id).btn.info Edit Lesson
-                  a(href="/lessons/delete?l="+les._id).btn.danger#delete X
+                  a(href="/lessons/edit?l="+les._id).btn.small.info Edit Lesson
+                  a(href="/lessons/delete?l="+les._id).btn.small.danger#delete X
   .span2
     .inside
       h3.bottombar Interests
@@ -50,7 +50,7 @@ if req.loggedIn && user.username == this_user.username
             a(href="/search?a=tag&q="+interest.name) #{interest.name}, 
       h3.bottombar Expertise
       p
-        if expertise.length == 1
+        if expertise.length == 0
           | None!
         else
           each subject in expertise
