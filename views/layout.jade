@@ -17,12 +17,17 @@ html
         .container
           a(href='/').brand
             strong Cambyar
-          ul.nav.secondary-nav
+          ul.nav
             if req.loggedIn                                                                      
               li
+                a(href="#") Portal
+              li
                 if req.user.notifications > 0
-                  strong
-                    a(href='/requests') #{req.user.notifications}
+                  a(href='/requests') Requests (#{req.user.notifications})
+                else 
+                  a(href='/requests') Requests
+          ul.nav.secondary-nav
+            if req.loggedIn                                                                      
               li                                                                       
                 img(src=email_hash + '?s=30')                                                          
               li
