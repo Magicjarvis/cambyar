@@ -1,17 +1,21 @@
-h2 Edit Lesson
-
-form(action='/lessons/edit?l='+lesson._id, method='POST')
-  p
-    label(for='title') Title
-    input(type='text', name='title', value= lesson.title)#title
-  p
-    label(for='tags') Tags
-    input( name='tags', value=tags)#tags
-  p
-    label(for='desc') Description
-    input(type='text', name='desc', value= lesson.description)#desc 
-  p
-    input(type='submit', value='Save Changes')
+.page-header
+  .inside
+    h1 Edit Lesson
+.row
+  .span6.offset5
+    .inside
+      form(action='/lessons/edit?l='+lesson._id, method='POST').form-stacked
+        p
+          label(for='title') Title
+          input(type='text', name='title', value= lesson.title)#title
+        p
+          label(for='tags') Tags
+          input( name='tags', value=tags)#tags
+        p
+          label(for='desc') Description
+          input(type='text', name='desc', value= lesson.description)#desc 
+        p
+          input(type='submit', value='Save Changes').btn.large.primary
 
 
 script(type='text/javascript')

@@ -43,8 +43,21 @@ function keyword(req, res, next) {
             models.Lesson.find({description: regex, _id: {$nin: ids}}, function(err,secondary) {
                 if(err) return next(err);
                 results = results.concat(secondary);
-                res.render('search', {
-                    'lessons': results,
+                async.map(results, function(lesson, cb) {
+                    models.User.findById(lesson.user, function(err, user) {
+                        if(err) return cb(err, null);
+                        lesson.author = user;
+                        models.Tag.find({_id: {$in: lesson.subjects}}, function(err, tags) {
+                            if(err) return cb(err, null);
+                            lesson.tags = tags;
+                            cb(null, lesson);
+                        });
+                    });
+                }, function(err, lessons) {
+                    if(err) return next(err);
+                    res.render('search', {
+                        'lessons': lessons,
+                    });
                 });
             });
         });
@@ -62,10 +75,22 @@ function tag(req, res, next) {
             if(err) return next(err);
             models.Lesson.find({subjects: {$in: result}}, function(err, lessons) {
                 if(err) return next(err);
-                res.render('search', {
-                    lessons: lessons,
+                async.map(lessons, function(lesson, cb) {
+                    models.User.findById(lesson.user, function(err, user) {
+                        if(err) return cb(err, null);
+                        lesson.author = user;
+                        models.Tag.find({_id: {$in: lesson.subjects}}, function(err, tags) {
+                            if(err) return cb(err, null);
+                            lesson.tags = tags;
+                            cb(null, lesson);
+                        });
+                    });
+                }, function(err, results) {
+                    if(err) return next(err);
+                    res.render('search', {
+                        'lessons': results,
+                    });
                 });
-
             });
         });
     });

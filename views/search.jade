@@ -1,10 +1,21 @@
 .row
-  .span16
+  .span9.offset4
     .inside
       form(action='/search', method='GET')
-        input(type='text', name='q')#search_bar
+        input(type='text', name='q').span7#search_bar
         input(type='submit', value='Search').btn.primary
       each lesson in lessons
         .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
-          h3= lesson.title + '  ' 
-           small= lesson.description
+          .row
+            .search-left
+              .search-img
+                img(src=utils.gravatarURL(lesson.author.email)+'?s=70')
+              .search-user
+                strong
+                  a(href="/user/"+lesson.author.username) #{utils.capitalize(lesson.author.username)}
+            .search-right
+              h3= lesson.title + ' '
+                small
+                  each t in lesson.tags
+                    a(href='search?a=tag&q=' + t.name).taglink #{t.name}
+              p= lesson.description

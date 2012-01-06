@@ -3,10 +3,11 @@
     h1 Welcome! 
       small Lesson Learned. 
 .row
-  .span16
+  .span8.offset4
     .inside
-      if req.loggedIn
-        p
-          a(href='/create-lesson', title='Makin lessons') Create Lesson
-      p
-        a(href='/search', title='Search fa shit') Search
+      h2
+        strong What do you want to learn?
+      br
+      form(action='/search', method='GET')
+        input(type='text', name='q').input-xlarge#search_bar
+        input(type='submit', value='Search').btn.primary

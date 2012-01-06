@@ -1,21 +1,22 @@
-h2 Create A Lesson
+.page-header
+  .inside
+    h1 Create A Lesson
 
-
-form(action='/create-lesson', method='POST')
-  p
-    label(for='title') Lesson Title
-    input(type='text', name='title')#title
-  p
-    label(for='tags') Tags (Subjects)
-    input(name='tags', id='tagstest')
-  p
-    label(for='desc') Description
-    textarea(name='desc', rows=4, cols=50)#desc
-  p
-    label(for='contact') Contact Info
-    ~#TODO
-  p
-    input(type='submit', value="Submit")
+.row
+  .span6.offset5
+    .inside
+      form(action='/create-lesson', method='POST').form-stacked
+        p
+          label(for='title') Lesson Title
+          input(type='text', name='title')#title
+        p
+          label(for='tags') Tags (Subjects)
+          input(name='tags', id='tagstest')
+        p
+          label(for='desc') Description
+          textarea(name='desc', rows=4, cols=50)#desc
+        p
+          input(type='submit', value="Submit").btn.large.primary
 
 
 
