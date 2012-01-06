@@ -127,6 +127,7 @@ exports.update = function(req, res, next) {
                         },
                         'email': req.body.email,
                         'bio': req.body.bio,
+                        'alerts': Boolean(req.body.alerts),
                         'interests': interest_ids,
                         'expertise': expert_ids,
                     }, function (err) {

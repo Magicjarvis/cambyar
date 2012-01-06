@@ -1,22 +1,26 @@
-if flash.context
-  h2= flash.context[0]
-else
-  h2 Log in!
+.page-header
+  .inside
+    if flash.context
+      h1= flash.context[0]
+    else
+      h1 Log in!
+.row
+  .span6.offset5
+    .inside
+      .errors                                                                          
+        if typeof errors != 'undefined'                                                
+          ul                                                                           
+          each error in errors                                                       
+            li= error 
 
-.errors                                                                          
-  if typeof errors != 'undefined'                                                
-    ul                                                                           
-      each error in errors                                                       
-        li= error 
-
-form(action='/login', method='POST')
-  p
-    label(for='login') Username
-    input(type='text', name=everyauth.password.loginFormFieldName)#login
-  p
-    label(for='password') Password
-    input(type='password', name=everyauth.password.passwordFormFieldName)#password
-  p
-    input(type='hidden', name='next', value=next)
-    input(type='submit', value='Submit')
+      form(action='/login', method='POST').form-stacked
+        p
+          label(for='login') Username
+          input(type='text', name=everyauth.password.loginFormFieldName)#login
+        p
+          label(for='password') Password
+          input(type='password', name=everyauth.password.passwordFormFieldName)#password
+        p
+          input(type='hidden', name='next', value=next)
+          input(type='submit', value='Submit').btn.large.primary
 
