@@ -21,12 +21,16 @@ body {
 .lesson {
   cursor: pointer;
   padding-left: 10px;
-  border-bottom: 1px solid #AAA;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #fff;
+  background-color: #eee;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 
 .lesson:hover {
-  margin-left: -2px;
-  border-left: 2px solid #AAA;
+  background-color: #ddd;
 }
 
 .profile {
@@ -97,4 +101,28 @@ body {
   background: #bbcef1;
   border-color: #6d95e0;
   text-decoration: none;
+}
+
+.search-img {
+  padding: 5px;
+  padding-top: 10px;
+}
+
+.search-user {
+  padding: 5px;
+  padding-bottom: 10px;
+}
+
+.search-left {
+  display: inline;
+  float: left;
+  margin-left: 20px;
+  width: 70px;
+}
+
+.search-right {
+  display: inline;
+  float: left;
+  margin-left: 20px;
+  width: 400px;
 }
