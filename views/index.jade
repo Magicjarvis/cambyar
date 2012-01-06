@@ -3,11 +3,13 @@
     h1 Welcome! 
       small Lesson Learned. 
 .row
-  .span16
+  .span8.offset4
     .inside
+      h2
+        strong What do you want to learn?
+      br
+      form(action='/search', method='GET')
+        input(type='text', name='q').input-xlarge#search_bar
+        input(type='submit', value='Search').btn.primary
+
       a(href='/user/portal') PORTAL TO HELL
-      if req.loggedIn
-        p
-          a(href='/create-lesson', title='Makin lessons') Create Lesson
-      p
-        a(href='/search', title='Search fa shit') Search

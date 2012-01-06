@@ -1,30 +1,34 @@
-h2= user.name.full
-
-form(action='/user/edit-profile', method='POST')
-  p
-    label(for='name_first') First Name
-    input(type='text', name='name_first', value= user.name.first)#name_first
-  p
-    label(for='name_last') Last Name
-    input(type='text', name='name_last', value= user.name.last)#name_last
-  p
-    label(for='email') E-mail 
-    input(type='text', name='email', value= user.email)#email
-  p
-    label(for='bio') Bio
-    textarea(type='text', name='bio')#bio #{user.bio}
-  p
-    label(for='interests') Interests
-    input(type='text', name='interests', value= interests)#interests
-  p
-    label(for='expertise') Expertise
-    input(type='text', name='expertise', value=expertise)#expertise
-  p
-    label(for='alerts')
-    input(type='checkbox', name='alerts', value='true', checked= user.alerts)#alerts 
-    |  E-mail Notifications
-  p
-    input(type='submit', value='Save Changes')
+.page-header
+  .inside
+    h1= user.name.full
+.row
+  .span6.offset5
+    .inside
+      form(action='/user/edit-profile', method='POST').form-stacked
+        p
+          label(for='name_first') First Name
+          input(type='text', name='name_first', value= user.name.first)#name_first
+        p
+          label(for='name_last') Last Name
+          input(type='text', name='name_last', value= user.name.last)#name_last
+        p
+          label(for='email') E-mail 
+          input(type='text', name='email', value= user.email)#email
+        p
+          label(for='bio') Bio
+          textarea(type='text', name='bio')#bio #{user.bio}
+        p
+          label(for='interests') Interests
+          input(type='text', name='interests', value= interests)#interests
+        p
+          label(for='expertise') Expertise
+          input(type='text', name='expertise', value=expertise)#expertise
+        p
+          label(for='alerts')
+          input(type='checkbox', name='alerts', value='true', checked= user.alerts)#alerts 
+          |  E-mail Notifications
+        p
+          input(type='submit', value='Save Changes').btn.large.primary
 
 script(type='text/javascript')
     $(function() {

@@ -10,7 +10,7 @@ if req.loggedIn && req.user.username == lesson.author.username
     .inside
       p
         each tag in tags
-          a(href="/search?a=tag&q="+tag.name) #{tag.name}, 
+          a(href="/search?a=tag&q="+tag.name).taglink #{tag.name}
       p= lesson.description
       p 
         strong Rating: #{lesson_rating}
