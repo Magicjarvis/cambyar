@@ -91,11 +91,24 @@ exports.page = function(req, res, next) {
                         models.Tag.find({_id : {$in : lesson.subjects}}, function(err, tags){
                             if(err) return next(err); 
                             lesson.author = user;
-                            res.render('lesson', {
-                                lesson: lesson,
-                                lesson_rating: rating,
-                                tags: tags,
-                            }); 
+                            if (req.loggedIn) {
+                                models.Request.findOne({lesson: lesson._id, from: req.user._id}, function(err, request) {
+                                   if(err) return next(err);
+                                   var requested = Boolean(request);
+                                   res.render('lesson', {
+                                       lesson: lesson,
+                                       lesson_rating: rating,
+                                       tags: tags,
+                                       requested: requested,
+                                   });
+                                });
+                            } else {       
+                                res.render('lesson', {
+                                    lesson: lesson,
+                                    lesson_rating: rating,
+                                    tags: tags,
+                                });
+                            }
                         });
                     }); 
                 });
@@ -166,7 +179,7 @@ exports.sendRequest = function(req, res, next) {
                         'edit_url': '/edit-profile' 
                     });
                 }
-                res.redirect('/lessons/'+lesson._id);
+                res.redirect('back');
             });
         });
     });

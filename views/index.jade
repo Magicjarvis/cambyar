@@ -1,10 +1,12 @@
 .page-header
-  h1 Welcome! 
-    small Lesson Learned. 
+  .inside
+    h1 Welcome! 
+      small Lesson Learned. 
 .row
   .span16
-   if req.loggedIn
+    .inside
+      if req.loggedIn
+        p
+          a(href='/create-lesson', title='Makin lessons') Create Lesson
       p
-        a(href='/create-lesson', title='Makin lessons') Create Lesson
-    p
-      a(href='/search', title='Search fa shit') Search
+        a(href='/search', title='Search fa shit') Search

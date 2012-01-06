@@ -1,10 +1,14 @@
-h2 Send #{teacher.username} a request for '#{lesson.title}'
-
-form(action='/lessons/request?l='+lesson._id, method='POST')
-  p 
-    | From: #{user.username}
-  p
-    label(for='message') Message
-    textarea(name='message', rows=4, cols=20)#message
-  p
-    input(type='submit', value='Send')
+.page-header
+  .inside
+    h1 Send #{teacher.username} a request for '#{lesson.title}'
+.row
+  .span6.offset5
+    .inside
+      form(action='/lessons/request?l='+lesson._id, method='POST').form-stacked
+        p 
+          | From: #{user.username}
+        p
+          label(for='message') Message
+          textarea(name='message', rows=4, cols=20)#message
+        p
+          input(type='submit', value='Send').btn.large.primary
