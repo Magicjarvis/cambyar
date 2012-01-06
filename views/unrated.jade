@@ -1,0 +1,11 @@
+.page-header
+  .inside
+    h2 Unrated Lessons
+.row
+  .span16
+    .inside
+      each l in lessons
+        .lesson
+          h3= l.title
+          p= l.description
+          a(href="/lessons/rate?l="+l._id).btn.large RATE!

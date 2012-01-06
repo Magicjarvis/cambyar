@@ -20,6 +20,10 @@ form(action='/user/edit-profile', method='POST')
     label(for='expertise') Expertise
     input(type='text', name='expertise', value=expertise)#expertise
   p
+    label(for='alerts')
+    input(type='checkbox', name='alerts', value='true', checked= user.alerts)#alerts 
+    |  E-mail Notifications
+  p
     input(type='submit', value='Save Changes')
 
 script(type='text/javascript')

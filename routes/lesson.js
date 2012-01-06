@@ -91,11 +91,24 @@ exports.page = function(req, res, next) {
                         models.Tag.find({_id : {$in : lesson.subjects}}, function(err, tags){
                             if(err) return next(err); 
                             lesson.author = user;
-                            res.render('lesson', {
-                                lesson: lesson,
-                                lesson_rating: rating,
-                                tags: tags,
-                            }); 
+                            if (req.loggedIn) {
+                                models.Request.findOne({lesson: lesson._id, from: req.user._id}, function(err, request) {
+                                   if(err) return next(err);
+                                   var requested = Boolean(request);
+                                   res.render('lesson', {
+                                       lesson: lesson,
+                                       lesson_rating: rating,
+                                       tags: tags,
+                                       requested: requested,
+                                   });
+                                });
+                            } else {       
+                                res.render('lesson', {
+                                    lesson: lesson,
+                                    lesson_rating: rating,
+                                    tags: tags,
+                                });
+                            }
                         });
                     }); 
                 });
@@ -156,16 +169,17 @@ exports.sendRequest = function(req, res, next) {
        
         request.save(function(err) {
             if(err) return next(err);
-            models.User.findById(lesson.user, function(err, user) {
+            models.User.findOne({_id: lesson.user, alerts: true }, function(err, user) {
                 if (err) return next(err);
-                if (!user) return res.send('No teacher for this lesson', 404); 
-                utils.sendEmail(user.email, './public/email/request.txt', {
-                    'subject': 'Pending Requst at Cambyar',
-                    'username': user.username,
-                    'response_url': '/requests',
-                    'edit_url': '/edit-profile' 
-                });
-                res.redirect('/lessons/'+lesson._id);
+                if (user) {
+                    utils.sendEmail(user.email, './public/email/request.txt', {
+                        'subject': 'Pending Requst at Cambyar',
+                        'username': user.username,
+                        'response_url': '/requests',
+                        'edit_url': '/edit-profile' 
+                    });
+                }
+                res.redirect('back');
             });
         });
     });
@@ -226,6 +240,41 @@ exports.sendRating = function(req, res, next) {
                 });
             });
 
+        });
+    });
+}
+
+/*
+ * GET request on the unrated page
+ */
+exports.unrated = function(req, res, next) {
+    models.Request.find({from: req.user._id, status: 'complete'}, function(err, requests) {
+        if(err) return next(err);
+        async.map(requests, function(request, cb) {
+            models.Rating.findOne({lesson: request.lesson}, function(err, rating) {
+                if(err) cb(err, null);
+                if(!rating) {
+                   cb(null, request.lesson);
+                } else {
+                   cb(null, undefined);
+                } 
+            });
+        }, function(err, lesson_ids) {
+            if(err) return next(err);
+            async.filter(lesson_ids, function(id, cb) {
+                if(id) {
+                    cb(true);
+                } else {
+                    cb(false);
+                }
+            }, function(filtered) {
+                models.Lesson.find({_id: {$in: filtered}}, function(err, lessons) {
+                    if(err) return next(err);
+                    res.render('unrated', {
+                        lessons: lessons,
+                    });
+                });
+            });
         });
     });
 }

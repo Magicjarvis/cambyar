@@ -14,10 +14,14 @@ if req.loggedIn && req.user.username == lesson.author.username
       p= lesson.description
       p 
         strong Rating: #{lesson_rating}
-      if !req.loggedIn || req.user.username !== lesson.author.username
-        #teachme_center
-          a(href='/lessons/request?l='+lesson._id).btn.large.success Teach me!
-
+      #teachme_center
+        if req.loggedIn && requested
+          a.btn.large.disabled.danger Already Requested
+        else if req.loggedIn && req.user.username !== lesson.author.username
+          a(data-controls-modal='teachme', data-backdrop='true',
+            data-keyboard='true').btn.large.success Teach me!
+        else if !req.loggedIn
+          a(href='/lessons/edit').btn.large.success Teach me!
   .span4
     .inside
       h3.bottombar About the Teacher
@@ -27,3 +31,19 @@ if req.loggedIn && req.user.username == lesson.author.username
 
 p
   a(href='/lessons/rate?l='+lesson._id) Rate (This link will not be here normally)
+
+if req.loggedIn
+  script(src="/bootstrapjs/bootstrap-modal.js")
+  #teachme.modal.hide.fade
+    .modal-header
+      a(href="#").close x
+      h3 Send #{lesson.author.username} a request for '#{lesson.title}'
+    .modal-body
+      form(action='/lessons/request?l='+lesson._id, method='POST').form-stacked
+        p 
+          | From: #{user.username}
+        p
+          label(for='message') Message
+          textarea(name='message', rows=4, cols=20)#message
+        p
+          input(type='submit', value='Send').btn.large.primary

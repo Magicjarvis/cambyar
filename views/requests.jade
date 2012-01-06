@@ -14,7 +14,7 @@
             p= r.message
           .right-request-pane
             .vert-center
-              a(href='/requests/action?a=accept&r=#{r.id}').btn.primary Accept  
+              a(href='/requests/action?a=accept&r=#{r.id}').btn.success Accept  
               a(href='/requests/action?a=remove&r=#{r.id}').btn.danger Deny
 
   .span8
@@ -29,7 +29,7 @@
             p= r.message
           .right-request-pane
             .vert-center
-              a(href='/requests/action?a=complete&r=#{r.id}').btn.primary Complete
+              a(href='/requests/action?a=complete&r=#{r.id}').btn.success Complete
               a(href='/requests/action?a=stale&r=#{r.id}').btn.danger Deny
 
     
