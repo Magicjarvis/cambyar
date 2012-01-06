@@ -18,6 +18,7 @@ var search = require('./search');
 exports.setRoutes = function(app) {
     app.get('/',index);
     
+    app.get('/user/portal', user.portal);
     app.get('/create-lesson', auth.requireLogin,lesson.create);
     app.post('/create-lesson', auth.requireLogin, lesson.save);
 

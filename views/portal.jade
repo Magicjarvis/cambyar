@@ -1,0 +1,4 @@
+each busyLesson in busyLessons
+  p= busyLesson.title
+  each student in busyLesson.current_students
+    p= student.name.full
