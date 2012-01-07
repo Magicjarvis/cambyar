@@ -12,15 +12,15 @@
 
       form(action='/register', method='POST').form-stacked#form
         .clearfix#loginfix
-          label(for='login') Desired Username
+          label(for='login') Desired Username*
           input(type='text', name=everyauth.password.loginFormFieldName)#login.error
           span.help-block#loginhelp
         .clearfix#passwordfix
-          label(for='password') Password
+          label(for='password') Password*
           input(type='password', name=everyauth.password.passwordFormFieldName)#password.error
           span.help-block#passwordhelp
         .clearfix#emailfix
-          label(for='email') E-mail
+          label(for='email') E-mail*
           input(type='text', name='email')#email
           span.help-block#emailhelp
         .clearfix#firstnamefix
@@ -69,7 +69,7 @@ script
     });
 
     $('#email').focusout(function() {
-      if(emailRegex.test($(this).val())) {
+      if(emailRegex.test($(this).val().toLowerCase())) {
         $('#emailhelp').text("");
         $('#emailfix').removeClass('error');
         $('#emailfix').addClass('success');
@@ -107,7 +107,7 @@ script
     $('#form').submit(function() {
       if(loginRegex.test($('#login').val()) &&
          passwordRegex.test($('#password').val()) &&
-         emailRegex.test($('#email').val()) &&
+         emailRegex.test($('#email').val().toLowerCase()) &&
          nameRegex.test($('#first_name').val()) &&
          nameRegex.test($('#last_name').val())) {
             return true;
