@@ -126,3 +126,7 @@ body {
   margin-left: 20px;
   width: 400px;
 }
+
+.right-justify {
+  float: right;
+}

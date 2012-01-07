@@ -1,4 +1,51 @@
-each busyLesson in busyLessons
-  p= busyLesson.title
-  each student in busyLesson.current_students
-    p= student.name.full
+.page-header
+  .inside
+    h1 User Portal
+.inside
+  .row
+    .span6
+      form(action='/search', method='GET')
+        input(type='text', name='q')#search_bar
+        input(type='submit', value='Search').btn.primary
+    .span10
+      a(href='/create-lesson').btn.primary.right-justify New Lesson
+.row
+  .span6
+    .inside
+      h2.bottombar Active Lesssons
+
+      each busyLesson in busyLessons
+        .lesson(onclick="location.href='/lessons/"+busyLesson._id+"';")   
+          h3= busyLesson.title + ' '
+            small
+              each student in busyLesson.current_students
+                img(src=utils.gravatarURL(student.email) + '?s=20', rel='twipsy', title=utils.capitalize(student.username))
+          p= busyLesson.description
+
+
+  .span10
+    .inside
+      h2.bottombar Recently Posted Lessons
+
+      each lesson in recentLessons
+        .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
+          .row
+            .search-left
+              .search-img
+                img(src=utils.gravatarURL(lesson.author.email)+'?s=70')
+              .search-user
+                strong
+                  a(href="/user/"+lesson.author.username) #{utils.capitalize(lesson.author.username)}
+            .search-right
+              h3= lesson.title + ' '
+                small
+                  each t in lesson.tags
+                    a(href='search?a=tag&q=' + t.name).taglink #{t.name}
+              p= lesson.description
+
+script(type='text/javascript')
+  $(function () {
+    $("img[rel=twipsy]").twipsy({
+      live: true
+    });
+  });

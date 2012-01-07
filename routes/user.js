@@ -176,14 +176,36 @@ exports.portal = function(req, res, next) {
                             cb(false); 
                         } 
                     }, function(busy_lessons) {
-                        res.render('portal', {
-                            recentLessons: recent_lessons,
-                            busyLessons: busy_lessons,
-                        });
+                       async.map(recent_lessons, function(recent_lesson, cb) {
+                            models.User.findById(recent_lesson.user, function(err, lesson_user) {
+                                if(err) return next(err);
+                                recent_lesson.author = lesson_user;
+                                 
+                                models.Tag.find({'_id': {$in: recent_lesson.subjects}}, function(err, lesson_tags) {
+                                    if(err) return next(err);
+                                    recent_lesson.tags = lesson_tags;
+                                    cb(null, recent_lesson);
+                                    
+                                });
+                            });
+                       
+                       }, function(err, recent_user_lessons) {
+                            if(err) return next(err);
+                            
+                            res.render('portal', {
+                                recentLessons: recent_user_lessons,
+                                busyLessons: busy_lessons,
+                                utils: utils,
+                            });
+                       });
                     });
             });
         });
     });
-
-
 }
+/*res.render('portal', {
+                            recentLessons: recent_user_lessons,
+                            busyLessons: busy_lessons,
+                            utils: utils,
+                        });
+*/
