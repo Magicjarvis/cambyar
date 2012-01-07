@@ -21,7 +21,7 @@ html
           ul.nav
             if req.loggedIn                                                                      
               li
-                a(href="#") Portal
+                a(href="/portal") Portal
               li
                 if req.user.notifications > 0
                   a(href='/requests') Requests (#{req.user.notifications})

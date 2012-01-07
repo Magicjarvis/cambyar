@@ -203,9 +203,3 @@ exports.portal = function(req, res, next) {
         });
     });
 }
-/*res.render('portal', {
-                            recentLessons: recent_user_lessons,
-                            busyLessons: busy_lessons,
-                            utils: utils,
-                        });
-*/
