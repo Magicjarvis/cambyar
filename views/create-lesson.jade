@@ -32,7 +32,7 @@ script(type='text/javascript')
         });
 
         var titleRegex = /^.{1,50}$/;
-        var tagsRegex = /^(([a-zA-Z0-9\-]{1,15})(×)){0,5}$/;
+        var tagsRegex = /^([a-zA-Z0-9\-]{0,15})?((,([a-zA-Z0-9\-]{0,15})){0,4})$/; 
         var descRegex = /^.{0,750}$/;
 
     $('#title').focusout(function() {
@@ -49,7 +49,7 @@ script(type='text/javascript')
     
 
     $('.tagit').focusout(function() {
-      if(tagsRegex.test($(this).text())) {
+      if(tagsRegex.test($('#tags').val())) {
         $('#tagshelp').text("");
         $('#tagsfix').removeClass('error');
         $('#tagsfix').addClass('success');
@@ -75,7 +75,7 @@ script(type='text/javascript')
     $('#form').submit(function() {
       if(titleRegex.test($('#title').val()) &&
          descRegex.test($('#desc').val()) &&
-         tagsRegex.test($('.tagit').text())) {
+         tagsRegex.test($('#tags').val())) {
             return true;
        } else { 
         $('#submitfix').addClass('error');
