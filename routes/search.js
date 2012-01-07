@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var async = require('async');
 var models = mongoose.models;
+var utils = require('../lib/utils');
 
 
 /*
@@ -82,13 +83,41 @@ function tag(req, res, next) {
                         models.Tag.find({_id: {$in: lesson.subjects}}, function(err, tags) {
                             if(err) return cb(err, null);
                             lesson.tags = tags;
-                            cb(null, lesson);
+                            // Find all the ratings for this lesson
+                            // Store total of ratings and num in lesson
+                            models.Rating.find({lesson: lesson._id}, function(err, ratings) {
+                                async.reduce(ratings, 0, function(memo, rating, cb) {
+                                    cb(null, memo+rating.value);
+                                }, function(err, total) {
+                                    lesson.total = total;
+                                    lesson.num = ratings.length;
+                                    cb(null, lesson);
+                                });
+                            });
                         });
                     });
                 }, function(err, results) {
                     if(err) return next(err);
-                    res.render('search', {
-                        'lessons': results,
+                    // Find ALL the ratings and reduce to average
+                    models.Rating.find({}, function(err, allRatings) {
+                        if (err) return next(err);
+                        async.reduce(allRatings, 0, function(memo, rate, cb) {
+                            cb(null, memo+rate.value);
+                        }, function(err, totalRating) {
+                            var totalAvg = 0;
+                            if(allRatings.length > 0) totalAvg = totalRating/allRatings.length;
+                            // Sorts by bayesian average (see utils)
+                            async.sortBy(results, function(les, cb) {
+                                // TODO 
+                                // Put in 10 for now, should be avg num of ratings per lesson
+                                cb(null, -utils.average(10, totalAvg, les.total, les.num));
+                            }, function(err, sorted) {
+                               if(err) return next(err); 
+                                res.render('search', {
+                                    'lessons': sorted,
+                                });
+                            });
+                        });
                     });
                 });
             });

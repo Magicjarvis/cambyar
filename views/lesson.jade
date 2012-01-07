@@ -1,7 +1,6 @@
 if req.loggedIn && req.user.username == lesson.author.username
   .top-right
     a(href='/lessons/edit?l=' + lesson._id).btn.info Edit Lesson
-    a(href='/lessons/delete?l=' + lesson._id).btn.danger X 
 .page-header
   .inside
     h1= lesson.title
