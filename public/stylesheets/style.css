@@ -66,7 +66,7 @@ body {
 
 .left-lesson-pane {
   display: inline-block;
-  width: 445px;
+  width: 385px;
 }
 
 .vert-center{
@@ -125,4 +125,8 @@ body {
   float: left;
   margin-left: 20px;
   width: 400px;
+}
+
+.right-justify {
+  float: right;
 }

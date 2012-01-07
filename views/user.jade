@@ -24,7 +24,7 @@ if req.loggedIn && user.username == this_user.username
       if req.loggedIn && user.username == this_user.username
         p
           a(href='/requested').btn Sent Requests 
-  .span10
+  .span9
     .inside
       p= this_user.bio
       if lessons.length >=1 
@@ -39,7 +39,7 @@ if req.loggedIn && user.username == this_user.username
                 .vert-center
                   a(href="/lessons/edit?l="+les._id).btn.small.info Edit Lesson
                   a(href="/lessons/delete?l="+les._id).btn.small.danger#delete X
-  .span2
+  .span3
     .inside
       h3.bottombar Interests
       p

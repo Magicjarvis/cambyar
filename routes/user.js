@@ -140,3 +140,66 @@ exports.update = function(req, res, next) {
         }
     });
 }
+/* GET request for a user portal page */
+exports.portal = function(req, res, next) {
+    
+    models.Lesson.find().sort('_id', 'descending').limit(5).run(function(err, recent_lessons) {
+        if(err) return next(err);
+        models.Lesson.find({user: req.user._id}).sort('_id', 'descending').run(function(err, user_lessons) {
+            if(err) return next(err);
+            async.map(user_lessons, function(user_lesson, cb) {
+                //query on requests
+                models.Request.find({lesson: user_lesson._id, to: req.user._id, status: {$in: ['in_session', 'pending']}}, function(err, requests) {
+                    //get users out of requests 
+                    async.map(requests, function(request, cb) {
+                        models.User.findById(request.from, function(err, student) {
+                            if(err) return next(err);
+                            cb(null, student);
+                        });
+                    //callback for the map over requests
+                    }, function(err, students ) {
+                        if(err) return next(err);
+                        if(students.length > 0) {
+                            user_lesson.current_students = students;
+                        }
+                        cb(null, user_lesson);
+                    });
+                });
+                //callback for the map over lessons
+            }, function(err, active_lessons) {
+                    //should be active lessons (with students)
+                    if(err) return next(err);
+                    async.filter(active_lessons, function(active_lesson, cb) {
+                        if(active_lesson.current_students) {
+                            cb(true); 
+                        } else {
+                            cb(false); 
+                        } 
+                    }, function(busy_lessons) {
+                       async.map(recent_lessons, function(recent_lesson, cb) {
+                            models.User.findById(recent_lesson.user, function(err, lesson_user) {
+                                if(err) return next(err);
+                                recent_lesson.author = lesson_user;
+                                 
+                                models.Tag.find({'_id': {$in: recent_lesson.subjects}}, function(err, lesson_tags) {
+                                    if(err) return next(err);
+                                    recent_lesson.tags = lesson_tags;
+                                    cb(null, recent_lesson);
+                                    
+                                });
+                            });
+                       
+                       }, function(err, recent_user_lessons) {
+                            if(err) return next(err);
+                            
+                            res.render('portal', {
+                                recentLessons: recent_user_lessons,
+                                busyLessons: busy_lessons,
+                                utils: utils,
+                            });
+                       });
+                    });
+            });
+        });
+    });
+}
