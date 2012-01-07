@@ -2,7 +2,7 @@
   .inside
     h1 Sign Up
 .row
-  .span6.offset5
+  .span10.offset5
     .inside
       .errors
         if typeof errors != 'undefined'
@@ -10,23 +10,112 @@
             each error in errors
               li= error
 
-
-      form(action='/register', method='POST').form-stacked 
-        p
+      form(action='/register', method='POST').form-stacked#form
+        .clearfix#loginfix
           label(for='login') Desired Username
-          input(type='text', name=everyauth.password.loginFormFieldName)#login
-        p
+          input(type='text', name=everyauth.password.loginFormFieldName)#login.error
+          span.help-block#loginhelp
+        .clearfix#passwordfix
           label(for='password') Password
-          input(type='password', name=everyauth.password.passwordFormFieldName)#password
-        p
+          input(type='password', name=everyauth.password.passwordFormFieldName)#password.error
+          span.help-block#passwordhelp
+        .clearfix#emailfix
           label(for='email') E-mail
           input(type='text', name='email')#email
-         p
+          span.help-block#emailhelp
+        .clearfix#firstnamefix
           label(for='first_name') First Name
           input(type='text', name='first_name')#first_name
-        p
+          span.help-block#firstnamehelp
+        .clearfix#lastnamefix
           label(for='last_name') Last Name
           input(type='text', name='last_name')#last_name
-        p
+          span.help-block#lastnamehelp
+        .clearfix
           input(type='hidden', name='next', value=next)
           input(type='submit', value='Submit').btn.large.primary
+        .clearfix#submitfix
+          span.help-block#submithelp
+
+script
+  $(function() {
+    var loginRegex = /^[a-zA-Z0-9_\-]{5,20}$/;
+    var passwordRegex = /^.{5,40}$/;
+    var emailRegex = #{utils.emailCheck};
+    var nameRegex = /^[a-zA-Z]{0,20}$/;
+    
+    $('#login').focusout(function() {
+      if(loginRegex.test($(this).val())) {
+        $('#loginhelp').text("");
+        $('#loginfix').removeClass('error');
+        $('#loginfix').addClass('success');
+      } else {
+        $('#loginfix').removeClass('success');
+        $('#loginfix').addClass('error');
+        $('#loginhelp').text("Username must be 5-20 characters and \\n only contain letters, numbers, _ and -");
+      }
+    });
+
+    $('#password').focusout(function() {
+      if(passwordRegex.test($(this).val())) {
+        $('#passwordhelp').text("");
+        $('#passwordfix').removeClass('error');
+        $('#passwordfix').addClass('success');
+      } else {
+        $('#passwordhelp').text("Password must be between 5 and 40 characters.");
+        $('#passwordfix').removeClass('success');
+        $('#passwordfix').addClass('error');
+      }
+    });
+
+    $('#email').focusout(function() {
+      if(emailRegex.test($(this).val())) {
+        $('#emailhelp').text("");
+        $('#emailfix').removeClass('error');
+        $('#emailfix').addClass('success');
+      } else {
+        $('#emailhelp').text("Not a valid email");
+        $('#emailfix').removeClass('success');
+        $('#emailfix').addClass('error');
+      }
+    });
+
+    $('#first_name').focusout(function() {
+      if(nameRegex.test($(this).val())) {
+        $('#firstnamehelp').text("");
+        $('#firstnamefix').removeClass('error');
+        $('#firstnamefix').addClass('success');
+      } else {
+        $('#firstnamehelp').text("Must only contain letters and at most 20 characters");
+        $('#firstnamefix').removeClass('success');
+        $('#firstnamefix').addClass('error');
+      }
+    });
+
+    $('#last_name').focusout(function() {
+      if(nameRegex.test($(this).val())) {
+        $('#lastnamehelp').text("");
+        $('#lastnamefix').removeClass('error');
+        $('#lastnamefix').addClass('success');
+      } else {
+        $('#lastnamehelp').text("Must only contain letters and at most 20 characters");
+        $('#lastnamefix').removeClass('success');
+        $('#lastnamefix').addClass('error');
+      }
+    });
+
+    $('#form').submit(function() {
+      if(loginRegex.test($('#login').val()) &&
+         passwordRegex.test($('#password').val()) &&
+         emailRegex.test($('#email').val()) &&
+         nameRegex.test($('#first_name').val()) &&
+         nameRegex.test($('#last_name').val())) {
+            return true;
+       } else { 
+        $('#submitfix').addClass('error');
+        $('#submithelp').text("Invalid form, please check your inputs and try again.");
+        return false;
+      }
+    });
+  });
+
