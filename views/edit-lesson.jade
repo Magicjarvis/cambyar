@@ -1,26 +1,89 @@
 .page-header
   .inside
     h1 Edit Lesson
+
 .row
-  .span6.offset5
+  .span8.offset4
     .inside
-      form(action='/lessons/edit?l='+lesson._id, method='POST').form-stacked
-        p
-          label(for='title') Title
-          input(type='text', name='title', value= lesson.title)#title
-        p
-          label(for='tags') Tags
-          input( name='tags', value=tags)#tags
-        p
+      form(action='/lessons/edit?l='+ lesson._id, method='POST').form-stacked#form
+        .clearfix#titlefix
+          label(for='title') Lesson Title*
+          input(type='text', name='title', value=lesson.title)#title.error.span7
+          span.help-block#titlehelp
+        .clearfix#tagsfix
+          label(for='tags') Tags (Subjects)
+          input(name='tags', value=tags)#tags.error
+          span.help-block#tagshelp
+        .clearfix#descfix
           label(for='desc') Description
-          input(type='text', name='desc', value= lesson.description)#desc 
-        p
-          input(type='submit', value='Save Changes').btn.large.primary
+          textarea(name='desc', rows=4, cols=50)#desc.error.span7 #{lesson.description}
+          span.help-block#deschelp
+        .clearfix
+          input(type='submit', value="Submit").btn.primary.span7
+        .clearfix#submitfix
+          span.help-block#submithelp
+
 
 
 script(type='text/javascript')
     $(function() {
+        $('#title').focus();
+
         $('#tags').tagit({
             availableTags: [#{all_tags}]
         });
+
+        var titleRegex = /^.{1,50}$/;
+        var tagsRegex = /^([a-zA-Z0-9\-]{0,15})?((,([a-zA-Z0-9\-]{0,15})){0,4})$/; 
+        var descRegex = /^.{0,750}$/;
+
+    $('#title').focusout(function() {
+      if(titleRegex.test($(this).val())) {
+        $('#titlehelp').text("");
+        $('#titlefix').removeClass('error');
+        $('#titlefix').addClass('success');
+      } else {
+        $('#titlehelp').text("Title is required and cannot exceed 50 characters");
+        $('#titlefix').removeClass('success');
+        $('#titlefix').addClass('error');
+      }
     });
+    
+
+    $('.tagit').focusout(function() {
+      if(tagsRegex.test($('#tags').val())) {
+        $('#tagshelp').text("");
+        $('#tagsfix').removeClass('error');
+        $('#tagsfix').addClass('success');
+      } else {
+        $('#tagshelp').text("Max of 5 tags, 15 characters each.");
+        $('#tagsfix').removeClass('success');
+        $('#tagsfix').addClass('error');
+      }
+    });
+
+    $('#desc').focusout(function() {
+      if(descRegex.test($(this).val())) {
+        $('#deschelp').text("");
+        $('#descfix').removeClass('error');
+        $('#descfix').addClass('success');
+      } else {
+        $('#deschelp').text("Description cannot exceed 750 characters");
+        $('#descfix').removeClass('success');
+        $('#descfix').addClass('error');
+      }
+    });
+
+    $('#form').submit(function() {
+      if(titleRegex.test($('#title').val()) &&
+         descRegex.test($('#desc').val()) &&
+         tagsRegex.test($('#tags').val())) {
+            return true;
+       } else { 
+        $('#submitfix').addClass('error');
+        $('#submithelp').text("Invalid form, please check your inputs and try again.");
+        return false;
+      }
+    });
+
+  });
