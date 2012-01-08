@@ -18,6 +18,10 @@
           label(for='desc') Description
           textarea(name='desc', rows=4, cols=50)#desc.error.span7
           span.help-block#deschelp
+        .clearfix#locfix
+          label(for='loc') Location*
+          input(name='loc')#loc.error.span7
+          span.help-block#lochelp
         .clearfix
           input(type='submit', value="Submit").btn.primary.span7
         .clearfix#submitfix
@@ -36,6 +40,7 @@ script(type='text/javascript')
         var titleRegex = /^.{1,50}$/;
         var tagsRegex = /^([a-zA-Z0-9\-]{0,15})?((,([a-zA-Z0-9\-]{0,15})){0,4})$/; 
         var descRegex = /^.{0,750}$/;
+        var locRegex = /^.+$/;
 
     $('#title').focusout(function() {
       if(titleRegex.test($(this).val())) {
@@ -74,9 +79,22 @@ script(type='text/javascript')
       }
     });
 
+    $('#loc').focusout(function() {
+      if(locRegex.test($(this).val())) {
+        $('#lochelp').text("");
+        $('#locfix').removeClass('error');
+        $('#locfix').addClass('success');
+      } else {
+        $('#lochelp').text("Must provide a location");
+        $('#locfix').removeClass('success');
+        $('#locfix').addClass('error');
+      }
+    });
+
     $('#form').submit(function() {
       if(titleRegex.test($('#title').val()) &&
          descRegex.test($('#desc').val()) &&
+         locRegex.test($('#loc').val()) &&
          tagsRegex.test($('#tags').val())) {
             return true;
        } else { 
