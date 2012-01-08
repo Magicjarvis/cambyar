@@ -27,6 +27,8 @@
 
 script(type='text/javascript')
     $(function() {
+        $('#title').focus();
+
         $('#tags').tagit({
             availableTags: [#{allTags}]
         });

@@ -43,6 +43,8 @@
 
 script
   $(function() {
+    $('#login').focus();
+  
     var loginRegex = /^[a-zA-Z0-9_\-]{5,20}$/;
     var passwordRegex = /^.{5,40}$/;
     var emailRegex = #{utils.emailCheck};
