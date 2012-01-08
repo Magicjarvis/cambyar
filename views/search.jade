@@ -19,3 +19,8 @@
                   each t in lesson.tags
                     a(href='search?a=tag&q=' + t.name).taglink #{t.name}
               p= lesson.description
+
+script
+  $(function() {
+    $('#search_bar').focus();
+  });

@@ -40,6 +40,8 @@
 
 script(type='text/javascript')
     $(function() {
+        $('#name_first').focus();
+
         var all_tags = [#{tags}];
         $('#interests').tagit({
             availableTags: all_tags
