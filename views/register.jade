@@ -19,6 +19,10 @@
           label(for='password') Password*
           input(type='password', name=everyauth.password.passwordFormFieldName)#password.error
           span.help-block#passwordhelp
+        .clearfix#confirmfix
+          label(for='confirm') Retype Password*
+          input(type='password', name='confirm')#confirm.error
+          span.help-block#confirmhelp
         .clearfix#emailfix
           label(for='email') E-mail*
           input(type='text', name='email')#email
@@ -65,6 +69,18 @@ script
         $('#passwordhelp').text("Password must be between 5 and 40 characters.");
         $('#passwordfix').removeClass('success');
         $('#passwordfix').addClass('error');
+      }
+    });
+
+    $('#confirm').focusout(function() {
+      if($(this).val() === $('#password').val()) {
+        $('#confirmhelp').text("");
+        $('#confirmfix').removeClass('error');
+        $('#confirmfix').addClass('success');
+      } else {
+        $('#confirmhelp').text("Passwords do not match.");
+        $('#confirmfix').removeClass('success');
+        $('#confirmfix').addClass('error');
       }
     });
 
