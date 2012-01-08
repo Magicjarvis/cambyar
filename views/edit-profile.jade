@@ -4,39 +4,141 @@
 .row
   .span6.offset5
     .inside
-      form(action='/user/edit-profile', method='POST').form-stacked
-        p
+      form(action='/user/edit-profile', method='POST').form-stacked#form
+        .clearfix#firstnamefix
           label(for='name_first') First Name
-          input(type='text', name='name_first', value= user.name.first)#name_first
-        p
+          input(type='text', name='name_first', value= utils.capitalize(user.name.first))#name_first.error
+          span.help-block#firstnamehelp
+        .clearfix#lastnamefix
           label(for='name_last') Last Name
-          input(type='text', name='name_last', value= user.name.last)#name_last
-        p
+          input(type='text', name='name_last', value= utils.capitalize(user.name.last))#name_last.error
+          span.help-block#lastnamehelp
+        .clearfix#emailfix
           label(for='email') E-mail 
-          input(type='text', name='email', value= user.email)#email
-        p
+          input(type='text', name='email', value= user.email)#email.error
+          span.help-block#emailhelp
+        .clearfix#biofix
           label(for='bio') Bio
-          textarea(type='text', name='bio')#bio #{user.bio}
-        p
+          textarea(type='text', name='bio', rows=6)#bio.span5.error #{user.bio}
+          span.help-block#biohelp
+        .clearfix#interestfix
           label(for='interests') Interests
-          input(type='text', name='interests', value= interests)#interests
-        p
+          input(type='text', name='interests', value= interests)#interests.error
+          span.help-block#interesthelp
+        .clearfix#expertisefix
           label(for='expertise') Expertise
-          input(type='text', name='expertise', value=expertise)#expertise
-        p
+          input(type='text', name='expertise', value=expertise)#expertise.error
+          span.help-block#expertisehelp
+        .clearfix
           label(for='alerts')
-          input(type='checkbox', name='alerts', value='true', checked= user.alerts)#alerts 
+          input(type='checkbox', name='alerts', value='true', checked= user.alerts)#alerts .error
           |  E-mail Notifications
-        p
+        .clearfix
           input(type='submit', value='Save Changes').btn.large.primary
+        .clearfix#submitfix
+          span.help-block#submithelp
 
 script(type='text/javascript')
     $(function() {
+        $('#name_first').focus();
+
         var all_tags = [#{tags}];
         $('#interests').tagit({
             availableTags: all_tags
         });
         $('#expertise').tagit({
             availableTags: all_tags
+        });
+
+        var emailRegex = #{utils.emailCheck};
+        var nameRegex = /^[a-zA-Z]{0,20}$/;
+        var bioRegex = /^.{0,500}$/;
+        var tagsRegex = /^([a-zA-Z0-9\-]{0,15})?((,([a-zA-Z0-9\-]{0,15})){0,9})$/; 
+        
+        $('#bio').focusout(function() {
+          if(bioRegex.test($(this).val())) {
+            $('#biohelp').text("");
+            $('#biofix').removeClass('error');
+            $('#biofix').addClass('success');
+          } else {
+            $('#biohelp').text("Bio cannot exceed 500 characters.");
+            $('#biofix').removeClass('success');
+            $('#biofix').addClass('error');
+          }
+        });
+
+        $('#email').focusout(function() {
+          if(emailRegex.test($(this).val().toLowerCase())) {
+            $('#emailhelp').text("");
+            $('#emailfix').removeClass('error');
+            $('#emailfix').addClass('success');
+          } else {
+            $('#emailhelp').text("Not a valid email");
+            $('#emailfix').removeClass('success');
+            $('#emailfix').addClass('error');
+          }
+        });
+
+        $('#name_first').focusout(function() {
+          if(nameRegex.test($(this).val())) {
+            $('#firstnamehelp').text("");
+            $('#firstnamefix').removeClass('error');
+            $('#firstnamefix').addClass('success');
+          } else {
+            $('#firstnamehelp').text("Must only contain letters and at most 20 characters");
+            $('#firstnamefix').removeClass('success');
+            $('#firstnamefix').addClass('error');
+          }
+        });
+
+        $('#name_last').focusout(function() {
+          if(nameRegex.test($(this).val())) {
+            $('#lastnamehelp').text("");
+            $('#lastnamefix').removeClass('error');
+            $('#lastnamefix').addClass('success');
+          } else {
+            $('#lastnamehelp').text("Must only contain letters and at most 20 characters");
+            $('#lastnamefix').removeClass('success');
+            $('#lastnamefix').addClass('error');
+          }
+        });
+
+        $('#interestfix').focusout(function() {
+          if(tagsRegex.test($('#interests').val())) {
+            $('#interesthelp').text("");
+            $('#interestfix').removeClass('error');
+            $('#interestfix').addClass('success');
+          } else {
+            $('#interesthelp').text("Max of 10 tags, 15 characters each.");
+            $('#interestfix').removeClass('success');
+            $('#interestfix').addClass('error');
+          }
+        });
+
+        $('#expertisefix').focusout(function() {
+          if(tagsRegex.test($('#expertise').val())) {
+            $('#expertisehelp').text("");
+            $('#expertisefix').removeClass('error');
+            $('#expertisefix').addClass('success');
+          } else {
+            $('#expertisehelp').text("Max of 10 tags, 15 characters each.");
+            $('#expertisefix').removeClass('success');
+            $('#expertisefix').addClass('error');
+          }
+        });
+
+        $('#form').submit(function() {
+          if(emailRegex.test($('#email').val().toLowerCase()) &&
+             nameRegex.test($('#name_first').val()) &&
+             nameRegex.test($('#name_last').val())  &&
+             tagsRegex.test($('#interests').val())  &&
+             tagsRegex.test($('#expertise').val())  &&
+             bioRegex.test($('#bio').val())) {
+                return true;
+           } else { 
+            $('#submitfix').addClass('error');
+            $('#submithelp').text("Invalid form, please check your inputs and try again.");
+            return false;
+          }
         });
     });

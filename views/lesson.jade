@@ -38,11 +38,38 @@ if req.loggedIn
       a(href="#").close x
       h3 Send #{lesson.author.username} a request for '#{lesson.title}'
     .modal-body
-      form(action='/lessons/request?l='+lesson._id, method='POST').form-stacked
+      form(action='/lessons/request?l='+lesson._id, method='POST').form-stacked#form
         p 
           | From: #{user.username}
-        p
+        .clearfix#messagefix
           label(for='message') Message
-          textarea(name='message', rows=4, cols=20)#message
+          textarea(name='message', rows=4, cols=20)#message.error
+          span.help-block#messagehelp
         p
           input(type='submit', value='Send').btn.large.primary
+
+script
+  $(function() {
+    $('#message').focusout(function() {
+      if($(this).val().length <= 500 && $(this).val().length > 0) {
+        $('#messagehelp').text("");
+        $('#messagefix').removeClass('error');
+        $('#messagefix').addClass('success');
+      } else {
+        $('#messagehelp').text("Message must be between 1-500 characters.");
+        $('#messagefix').removeClass('success');
+        $('#messagefix').addClass('error');
+      }
+    });
+
+    $('#form').submit(function() {
+      if($('#message').val().length <= 500 &&
+         $('#message').val().length > 0) {
+          return true;
+      } else {
+        $('#messagefix').addClass('error');
+        $('#messagehelp').text("Message must be between 1-500 characters.");
+        return false;
+      }
+    });
+  });
