@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose');
 var async = require('async');
+var geo = require('geocoder');                
 var models = mongoose.models;
 var utils = require('../lib/utils');
 
@@ -21,6 +22,9 @@ exports.search = function(req, res, next) {
     switch(req.query.a){
         case 'tag':
             tag(req, res, next);
+            break;
+        case 'loc':
+            loc(req, res, next);
             break;
         default:
             keyword(req, res, next);
@@ -124,4 +128,33 @@ function tag(req, res, next) {
         });
     });
 
+}
+
+
+function loc(req, res, next) {
+    var address = req.query.q;
+    geo.geocode(address, function(err, data) {
+        if(err) return next(err);
+        var loc = data.results[0].geometry.location;
+        models.Lesson.find({loc: {$near: [loc.lat,loc.lng]}}, function(err, lessons) {
+            if(err) return next(err);
+            async.map(lessons, function(lesson, cb) {
+                models.User.findById(lesson.user, function(err, user) {
+                    if(err) return cb(err, null);
+                    lesson.author = user;
+                    models.Tag.find({_id: {$in: lesson.subjects}}, function(err, tags) {
+                        if(err) return cb(err, null);
+                        lesson.tags = tags;
+                        cb(null, lesson);
+                    });
+                });
+            }, function(err, results) {
+                if(err) return next(err);
+                res.render('search', {
+                    'lessons': results,
+                });
+            });
+        });
+
+    });
 }

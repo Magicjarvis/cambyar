@@ -4,6 +4,7 @@
  */
 var mongoose = require('mongoose');
 var async = require('async');
+var geo = require('geocoder');
 var utils = require('../lib/utils');
 var models = mongoose.models;
 
@@ -48,17 +49,21 @@ exports.save = function(req, res, next) {
             }
         });
     }, function(err, results) {
-        var lesson = new models.Lesson({
-            user: req.user._id, 
-            description: req.body.desc,
-            title: req.body.title,
-            subjects: results, 
-        });    
-        lesson.save(function(err) {
+        geo.geocode(req.body.loc, function(err, data) {
             if(err) return next(err);
-            res.redirect('/lessons/' + lesson._id);
+            var loc = data.results[0].geometry.location;
+            var lesson = new models.Lesson({
+                user: req.user._id, 
+                description: req.body.desc,
+                title: req.body.title,
+                subjects: results, 
+                loc: [loc.lat, loc.lng],
+            });    
+            lesson.save(function(err) {
+                if(err) return next(err);
+                res.redirect('/lessons/' + lesson._id);
+            });
         });
-        
     });
 }
 
@@ -298,12 +303,15 @@ exports.edit = function(req, res, next) {
                     async.map(all_tags, function(item, cb) {
                         cb(null, "'" + item.name + "'");
                     }, function(err, new_all_tags) {
-                        res.render('edit-lesson', {
-                            all_tags: new_all_tags,
-                            lesson: lesson,
-                            tags: new_tags,
+                        geo.reverseGeocode(lesson.loc[0], lesson.loc[1], function(err, data) {
+                            if(err) return next(err);
+                            res.render('edit-lesson', {
+                                all_tags: new_all_tags,
+                                lesson: lesson,
+                                tags: new_tags,
+                                loc: data.results[0].formatted_address,
+                            });
                         });
-
 
                     });
 
@@ -336,13 +344,18 @@ exports.update = function(req, res, next) {
         });
     }, function(err, result) {
         if(err) return next(err);
-        models.Lesson.update({_id: req.query.l, user: req.user._id}, {
-            title: req.body.title,
-            description: req.body.desc,
-            subjects: result,
-        }, function(err) {
+        geo.geocode(req.body.loc, function(err, data) {
             if(err) return next(err);
-            res.redirect('/lessons/'+req.query.l);   
+            var loc = data.results[0].geometry.location;
+            models.Lesson.update({_id: req.query.l, user: req.user._id}, {
+                title: req.body.title,
+                description: req.body.desc,
+                subjects: result,
+                loc: [loc.lat,loc.lng],
+            }, function(err) {
+                if(err) return next(err);
+                res.redirect('/lessons/'+req.query.l);   
+            });
         });
     });
 }
