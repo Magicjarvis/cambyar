@@ -1,9 +1,13 @@
 .row
   .span9.offset4
     .inside
-      form(action='/search', method='GET')
-        input(type='text', name='q').span7#search_bar
-        input(type='submit', value='Search').btn.primary
+      form(action='/search', method='GET').fat
+        input(type='text', name='q', value=req.query.q).span5.tagfat#search_bar
+        select(name='a')#type.span2.fat
+          option(value='tag') Tag
+          option(value='loc') Location
+          option(value='key') Keyword
+        input(type='submit', value='Search').btn.primary.span2.btnfat
       each lesson in lessons
         .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
           .row
@@ -20,7 +24,71 @@
                     a(href='search?a=tag&q=' + t.name).taglink #{t.name}
               p= lesson.description
 
+.row
+  .span9.offset5
+    .inside
+      .pagination
+        ul
+          li.prev
+            a(href="#")#prev &larr; Previous
+          li.page
+            a(href="#") 1
+          li.page
+            a(href="#") 2
+          li.page
+            a(href="#") 3
+          li.page
+            a(href="#") 4
+          li.page
+            a(href="#") 5
+          li.next
+            a(href="#")#next Next &rarr; 
 script
   $(function() {
     $('#search_bar').focus();
+
+    var curr = #{req.query.p || 1};
+    var page = "/search?q=#{req.query.q}&a=#{req.query.a}&p=";
+    $('.page > a').each(function() {
+      $(this).attr('href', page+$(this).text());
+      if($(this).text() == curr) {
+        $(this).parent().addClass('active');
+      }
+    });
+
+   $('#prev').attr('href', page + (curr-1));
+   $('#next').attr('href', page + (curr+1));
+
+   if (curr == 1) {
+     $('.prev').addClass('disabled');
+     $('#prev').click(function() {
+        return false
+     });
+   } else if (curr == 5) {
+     $('.next').addClass('disabled');
+     $('#next').click(function() {
+        return false
+     });
+   }
+
+   $('#type').change(function() {
+     if($(this).val() == 'tag') {
+       $('#search_bar').tagit({
+          availableTags: [#{req.tags}],
+       });
+       $('.tagit').show();
+       $('.tagit').addClass('tags');
+       $('#search_bar').hide();
+       $('.ui-widget-content[type=text]').attr('style', 'width: 100px');
+     } else {
+       $('.tagit').hide();
+       $('#search_bar').show();
+       $('#search_bar').tagit('removeAll');
+     }
+   });
+
+
+   $('#type').val('#{req.query.a}');
+   $('#type').trigger('change');
+
   });
