@@ -72,13 +72,17 @@ function keyword(req, res, next) {
 function tag(req, res, next) {
     var terms = decodeURIComponent(req.query.q);
     var terms = terms.split(",");
+    var page = (req.query.p || 1) - 1;
     models.Tag.find({name: {$in: terms}}, function(err, tags) {
         if (err) return next(err);
         async.map(tags, function(tag, cb) {
             cb(null, tag._id);
         }, function(err, result) {
             if(err) return next(err);
-            models.Lesson.find({subjects: {$in: result}}, function(err, lessons) {
+            models.Lesson.find({subjects: {$in: result}})
+                         .skip(20*page)
+                         .limit(20)
+                         .run(function(err, lessons) {
                 if(err) return next(err);
                 async.map(lessons, function(lesson, cb) {
                     models.User.findById(lesson.user, function(err, user) {
@@ -133,10 +137,14 @@ function tag(req, res, next) {
 
 function loc(req, res, next) {
     var address = req.query.q;
+    var page = (req.query.p || 1) - 1;
     geo.geocode(address, function(err, data) {
         if(err) return next(err);
         var loc = data.results[0].geometry.location;
-        models.Lesson.find({loc: {$near: [loc.lat,loc.lng]}}, function(err, lessons) {
+        models.Lesson.find({loc: {$near: [loc.lat,loc.lng]}})
+                     .skip(page*20)
+                     .limit(20)
+                     .run(function(err, lessons) {
             if(err) return next(err);
             async.map(lessons, function(lesson, cb) {
                 models.User.findById(lesson.user, function(err, user) {
