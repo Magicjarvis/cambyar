@@ -1,13 +1,13 @@
 .row
   .span9.offset4
     .inside
-      form(action='/search', method='GET')
-        input(type='text', name='q', value=req.query.q).span5#search_bar
-        select(name='a')#type.span2
+      form(action='/search', method='GET').fat
+        input(type='text', name='q', value=req.query.q).span5.tagfat#search_bar
+        select(name='a')#type.span2.fat
           option(value='tag') Tag
           option(value='loc') Location
           option(value='key') Keyword
-        input(type='submit', value='Search').btn.primary.span2
+        input(type='submit', value='Search').btn.primary.span2.btnfat
       each lesson in lessons
         .lesson(onclick="location.href='/lessons/"+lesson._id+"';")   
           .row
@@ -47,8 +47,6 @@ script
   $(function() {
     $('#search_bar').focus();
 
-    $('#type').val('#{req.query.a}');
-
     var curr = #{req.query.p || 1};
     var page = "/search?q=#{req.query.q}&a=#{req.query.a}&p=";
     $('.page > a').each(function() {
@@ -72,5 +70,25 @@ script
         return false
      });
    }
+
+   $('#type').change(function() {
+     if($(this).val() == 'tag') {
+       $('#search_bar').tagit({
+          availableTags: [#{req.tags}],
+       });
+       $('.tagit').show();
+       $('.tagit').addClass('tags');
+       $('#search_bar').hide();
+       $('.ui-widget-content[type=text]').attr('style', 'width: 100px');
+     } else {
+       $('.tagit').hide();
+       $('#search_bar').show();
+       $('#search_bar').tagit('removeAll');
+     }
+   });
+
+
+   $('#type').val('#{req.query.a}');
+   $('#type').trigger('change');
 
   });

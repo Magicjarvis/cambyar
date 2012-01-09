@@ -130,3 +130,24 @@ body {
 .right-justify {
   float: right;
 }
+
+.tags {
+  display: inline-block;
+  margin-bottom: -10px;
+  width: 268px;
+  min-height: 30px;
+  float: left;
+}
+
+.tagfat {
+  height: 24px;
+}
+
+.fat {
+  min-height: 35px;
+}
+
+.btnfat {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

@@ -19,17 +19,26 @@ exports.search = function(req, res, next) {
             lessons: [],
         });
     } 
-    switch(req.query.a){
-        case 'tag':
-            tag(req, res, next);
-            break;
-        case 'loc':
-            loc(req, res, next);
-            break;
-        default:
-            keyword(req, res, next);
-    }
-
+    models.Tag.find({}, function(err, tags) {
+        if(err) return next(err);
+        async.map(tags, function(tag, cb) {
+            cb(null, "'" + tag.name + "'");
+        }, function(err, all_tags) {
+            if(err) return next(err);
+            req.tags = all_tags;
+            switch(req.query.a){
+                case 'tag':
+                    tag(req, res, next);
+                    break;
+                case 'loc':
+                    loc(req, res, next);
+                    break;
+                case 'key':
+                default:
+                    keyword(req, res, next);
+            }
+        });
+    });
 }
 
 function keyword(req, res, next) {
